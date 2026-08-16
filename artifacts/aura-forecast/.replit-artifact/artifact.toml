@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "AURA 2026 Forecasting Studio"
+description = "A research-ready environmental data analysis and refractivity forecasting dashboard built from the lecturer-provided Excel dataset. It surfaces data quality, exploratory analysis, model validation, daily and monthly forecasts, holdout evaluation, and downloadable research outputs."
+version = "1.0.0"
+id = "artifacts/aura-forecast"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21213
+
+[services.development]
+run = "pnpm --filter @workspace/aura-forecast run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/aura-forecast", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/aura-forecast/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21213"
+BASE_PATH = "/"

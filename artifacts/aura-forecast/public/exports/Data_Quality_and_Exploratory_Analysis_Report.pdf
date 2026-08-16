@@ -1,0 +1,85 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 2147 >>
+stream
+BT
+/F1 10 Tf
+52 760 Td
+(AURA 2026 Data Quality & Exploratory Analysis Report) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Dataset description: 286,696 valid observations were parsed from) Tj
+0 -14 Td
+(AY_Project_Data_1786812502784.xlsx. The workbook contains split date/time columns, repeated) Tj
+0 -14 Td
+(metadata/header rows, and missing sentinel values.) Tj
+0 -14 Td
+(Cleaning methodology: 3,121 non-observation rows were excluded from the analysis frame.) Tj
+0 -14 Td
+(Exact duplicate rows: 0. Duplicate timestamps: 0; conflicting timestamp groups: 0. The -9999) Tj
+0 -14 Td
+(sentinel was preserved as missing, not converted to zero.) Tj
+0 -14 Td
+(The observation dates were calendar-shifted from 2022 to 2026 for the project's forecasting) Tj
+0 -14 Td
+(timeline while preserving the original month, day and time structure.) Tj
+0 -14 Td
+(Chronological split: 202,965 records from February-August 2026 were eligible for training;) Tj
+0 -14 Td
+(74,021 records from September 2026 onward were held out. No holdout rows were used for model) Tj
+0 -14 Td
+(fitting, feature fitting, or validation.) Tj
+0 -14 Td
+(Model: Chronological multivariate linear regression targeting refractivity. Validation used) Tj
+0 -14 Td
+(the final training month as a chronological validation period. Metrics: MAE=26.136164,) Tj
+0 -14 Td
+(RMSE=31.693458, R2=-4.695695, bias=-23.726993.) Tj
+0 -14 Td
+(Limitations: future environmental predictors are represented by training-period hour-of-day) Tj
+0 -14 Td
+(climatology because the project prohibits external data. The forecast is therefore an) Tj
+0 -14 Td
+(explainable baseline for demonstration and should not be described as a full operational) Tj
+0 -14 Td
+(weather forecast.) Tj
+0 -14 Td
+(April vs July means: {"April 2026": {"temperature": 25.1325, "relativeHumidity": 52.0312,) Tj
+0 -14 Td
+("pressure": 968.9413, "heatIndex": 24.3313, "refractivity": 321.8232}, "July 2026":) Tj
+0 -14 Td
+({"temperature": 26.6256, "relativeHumidity": 77.897, "pressure": 970.8459, "heatIndex":) Tj
+0 -14 Td
+(24.668, "refractivity": 363.7233}}. Correlations are descriptive associations only and do) Tj
+0 -14 Td
+(not prove causation.) Tj
+0 -14 Td
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2510
+%%EOF

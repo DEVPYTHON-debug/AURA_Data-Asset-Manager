@@ -1,0 +1,1339 @@
+MASTER PROMPT — BUILD THE PROJECT FROM SCRATCH
+
+I am starting this project on a completely new Replit account/project.
+
+Do NOT assume that any previous code, model, dashboard, database, preprocessing pipeline, or previous implementation exists.
+
+Build the project from the ground up based on the requirements below.
+
+The project is an academic/research project involving environmental/weather data analysis, refractivity analysis, machine-learning modelling, and future forecasting.
+
+The lecturer has provided a new Excel dataset, and this new dataset must be the authoritative source for the model.
+
+---
+
+1. CORE OBJECTIVE
+
+Build a complete, professional, research-ready system that can:
+
+1. Import the new lecturer-provided Excel dataset.
+2. Carefully clean and validate the data.
+3. Correct inconsistent date formats.
+4. Change the dataset's observation year from 2022 to 2026 in the generated cleaned Excel files.
+5. Perform comprehensive data-quality analysis.
+6. Perform exploratory data analysis.
+7. Generate scientifically meaningful graphs and charts.
+8. Analyze relationships between environmental variables and refractivity.
+9. Train a machine-learning forecasting model using ONLY the new lecturer dataset.
+10. Use data before September 2026 for training.
+11. Keep September 2026 onward completely outside the training data.
+12. Use September 2026 onward as the future forecasting/holdout period.
+13. Support months-ahead forecasting.
+14. Support selecting an individual date and generating hourly predictions for that day.
+15. Provide a professional interactive dashboard.
+16. Provide downloadable Excel/CSV results.
+17. Generate research-quality reports.
+18. Generate a final ZIP package containing all important outputs.
+
+The final product should be suitable for demonstration and academic project defense.
+
+---
+
+2. DATASET
+
+The new lecturer dataset will be uploaded to the project.
+
+The filename may be:
+
+"AY Project Data.xlsx"
+
+Treat the uploaded lecturer dataset as:
+
+THE ONLY AUTHORITATIVE TRAINING DATASET.
+
+Do NOT use any previous dataset.
+
+Do NOT search for or recreate old project data.
+
+Do NOT merge another dataset into this dataset.
+
+Do NOT use synthetic data for model training unless I explicitly request it.
+
+---
+
+3. DATE CONVERSION — VERY IMPORTANT
+
+The source data contains dates associated with 2022.
+
+I explicitly want the generated cleaned dataset to have the year changed from:
+
+2022 → 2026
+
+This is NOT merely an internal model transformation.
+
+The actual dates inside the generated cleaned Excel file must show 2026.
+
+For example:
+
+"15/04/2022 14:30"
+
+must become:
+
+"15/04/2026 14:30"
+
+Similarly:
+
+"20/07/2022 08:15"
+
+must become:
+
+"20/07/2026 08:15"
+
+Preserve:
+
+- Month
+- Day
+- Hour
+- Minute
+- Second
+
+Only change the year.
+
+Do NOT leave the cleaned dataset displaying 2022.
+
+---
+
+4. IMPORTANT SCIENTIFIC NOTE ABOUT THE DATE CHANGE
+
+The system must document this correctly.
+
+Do NOT claim that the physical measurements were originally collected in 2026.
+
+Instead, state that:
+
+«The observation dates were calendar-shifted from 2022 to 2026 for the project's forecasting timeline while preserving the original month, day and time structure.»
+
+This distinction must appear in the documentation/report.
+
+---
+
+5. DATE FORMAT CLEANING
+
+The Excel file contains inconsistent date formatting.
+
+Do not simply assume every date is in the same format.
+
+Build a robust date-cleaning system capable of handling:
+
+- Excel datetime values
+- String dates
+- DD-MM-YY
+- DD/MM/YY
+- Dates containing time
+- Missing dates
+- Invalid dates
+- Ambiguous dates
+
+The original dataset's date convention should be interpreted carefully.
+
+Do NOT silently swap day and month.
+
+For example, if the intended source format is:
+
+"DD-MM-YY"
+
+then:
+
+"04-07-22"
+
+must be interpreted as:
+
+"4 July 2022"
+
+and subsequently converted to:
+
+"4 July 2026"
+
+NOT:
+
+"7 April 2026".
+
+Create validation checks that detect suspicious date interpretations.
+
+---
+
+6. CLEANING PIPELINE
+
+Build a reusable data-cleaning pipeline.
+
+It should detect and handle:
+
+- Blank rows
+- Repeated headers
+- Metadata rows
+- Invalid records
+- Duplicate rows
+- Duplicate timestamps
+- Missing values
+- "-9999" sentinel values
+- Impossible values
+- Invalid dates
+- Formatting inconsistencies
+- Non-numeric values in numeric columns
+- Unexpected column names
+- Leading/trailing spaces
+
+Do not delete data blindly.
+
+Every cleaning decision must be documented.
+
+---
+
+7. -9999 VALUES
+
+Treat "-9999" as a missing/invalid sentinel value where appropriate.
+
+Do NOT automatically replace every "-9999" with zero.
+
+Do NOT automatically delete the entire row.
+
+Determine the appropriate treatment for each variable.
+
+Report:
+
+- Number of "-9999" values
+- Percentage of affected records
+- Columns affected
+- Treatment applied
+
+---
+
+8. DUPLICATES
+
+Detect:
+
+Exact duplicate rows
+
+and:
+
+Duplicate timestamps
+
+Do not automatically delete every repeated timestamp.
+
+Some repeated timestamps may represent legitimate measurements from different variables/sensors.
+
+Distinguish:
+
+- Exact duplicates
+- Duplicate timestamps with different measurements
+- Conflicting records
+- Legitimate repeated observations
+
+Document what was removed and why.
+
+---
+
+9. CLEANED EXCEL FILE
+
+Generate:
+
+"AY_Project_Data_CLEANED_2026.xlsx"
+
+The workbook must contain at least:
+
+Sheet 1 — Cleaned_Data
+
+The cleaned dataset with the dates explicitly converted to 2026.
+
+Sheet 2 — Cleaning_Summary
+
+Include:
+
+- Original row count
+- Final row count
+- Removed rows
+- Duplicate count
+- Missing-value counts
+- "-9999" counts
+- Invalid-date count
+- Date range
+- Original year
+- Converted year
+- Training period
+- Forecast period
+- Cleaning timestamp
+
+Sheet 3 — Data_Quality
+
+Detailed variable-level quality statistics.
+
+Sheet 4 — Training_Data
+
+Only records eligible for model training.
+
+Sheet 5 — Holdout_Data
+
+September 2026 onward observations, if available.
+
+These holdout observations MUST NOT be used for training.
+
+---
+
+10. TRAINING PERIOD
+
+After converting the dates to 2026:
+
+TRAINING DATA:
+
+February 2026 → August 2026
+
+The exact start date should be determined from the actual available data.
+
+The critical rule is:
+
+«NO September 2026 or later observations may enter the training dataset.»
+
+---
+
+11. FORECAST PERIOD
+
+The forecasting period begins:
+
+September 2026
+
+Therefore:
+
+TRAINING
+
+February 2026
+      ↓
+March
+      ↓
+April
+      ↓
+May
+      ↓
+June
+      ↓
+July
+      ↓
+August 2026
+      │
+      │ TRAINING CUTOFF
+      ▼
+FORECASTING
+
+September 2026
+      ↓
+October
+      ↓
+November
+      ↓
+December
+      ↓
+Future months...
+
+The system must support months-ahead forecasting.
+
+---
+
+12. HOLDOUT DATA
+
+If the source Excel file contains observations corresponding to September 2026 onward, preserve those observations as:
+
+HOLDOUT / ACTUAL DATA
+
+They must not be used for:
+
+- Training
+- Scaling
+- Feature fitting
+- Model fitting
+- Hyperparameter tuning
+
+They can be used later for:
+
+Predicted vs Actual evaluation.
+
+This is essential for demonstrating whether the forecasting model performs well on unseen periods.
+
+---
+
+13. NO DATA LEAKAGE
+
+Implement strict chronological separation.
+
+The system must never:
+
+- Randomly mix future data into training.
+- Fit scalers on future data.
+- Fit preprocessing on the complete dataset before splitting.
+- Use September+ actual values when training.
+- Use future target values to generate future predictions.
+
+All preprocessing objects must be fitted using training data only.
+
+---
+
+14. DATA QUALITY ANALYSIS
+
+Perform comprehensive data-quality analysis.
+
+For every major numeric variable calculate:
+
+- Number of observations
+- Missing values
+- Missing percentage
+- Invalid values
+- Minimum
+- Maximum
+- Mean
+- Median
+- Standard deviation
+- Variance
+- Q1
+- Q3
+- IQR
+- Outlier count
+- Valid-value percentage
+
+Identify all available environmental variables from the actual Excel file.
+
+Likely variables may include:
+
+- Temperature
+- Relative Humidity
+- Pressure
+- Heat Index
+- Refractivity
+- Signal Strength
+- Signal Quality
+- Satellite information
+- Latitude
+- Longitude
+- Altitude
+- Accuracy
+- Battery level
+
+Do not invent columns.
+
+Use the actual dataset columns.
+
+---
+
+15. OUTLIER ANALYSIS
+
+Use scientifically appropriate methods such as:
+
+- IQR
+- Z-score where appropriate
+- Domain/range checks
+
+Do not automatically delete every statistical outlier.
+
+An unusual weather measurement may be real.
+
+Flag questionable observations and document the treatment.
+
+---
+
+16. REQUIRED DATA ANALYSIS
+
+Perform exploratory data analysis covering:
+
+Descriptive statistics
+
+Data completeness
+
+Time-series behaviour
+
+Variable distributions
+
+Correlations
+
+Relationships between variables
+
+Monthly behaviour
+
+Daily behaviour where appropriate
+
+Refractivity behaviour
+
+---
+
+17. REQUIRED GRAPHS
+
+Generate research-quality visualizations.
+
+At minimum:
+
+Data-quality charts
+
+1. Missing-value bar chart
+2. Data completeness chart
+3. Observations per month
+4. Observations per day where meaningful
+
+Distribution charts
+
+5. Temperature histogram
+6. RH histogram
+7. Pressure histogram
+8. Refractivity histogram
+9. Heat Index histogram where available
+
+Box plots
+
+10. Temperature
+11. RH
+12. Pressure
+13. Refractivity
+14. Heat Index where available
+
+Time-series graphs
+
+15. Temperature over time
+16. RH over time
+17. Pressure over time
+18. Refractivity over time
+19. Heat Index over time where available
+
+Relationship graphs
+
+20. Temperature vs Refractivity
+21. RH vs Refractivity
+22. Pressure vs Refractivity
+23. Heat Index vs Refractivity where available
+
+Correlation
+
+24. Correlation heatmap
+
+Monthly comparisons
+
+25. Monthly average temperature
+26. Monthly average RH
+27. Monthly average pressure
+28. Monthly average refractivity
+
+Do not create charts merely for quantity.
+
+Every chart must have a research purpose.
+
+---
+
+18. APRIL AND JULY ANALYSIS
+
+April and July are important analysis periods.
+
+Provide dedicated analysis for:
+
+April 2026
+
+and
+
+July 2026
+
+Compare relevant environmental variables and refractivity.
+
+Generate appropriate:
+
+- Bar charts
+- Box plots
+- Time-series graphs
+- Statistical summaries
+
+Do NOT treat January or October as special analysis periods.
+
+---
+
+19. CORRELATION ANALYSIS
+
+Analyze relationships between refractivity and environmental variables.
+
+At minimum:
+
+- Temperature ↔ Refractivity
+- Relative Humidity ↔ Refractivity
+- Pressure ↔ Refractivity
+- Heat Index ↔ Refractivity
+
+Calculate:
+
+- Pearson correlation
+- Spearman correlation where appropriate
+
+Do not interpret correlation as proof of causation.
+
+---
+
+20. MODEL TRAINING
+
+Train a new forecasting model using ONLY:
+
+"AY_Project_Data_CLEANED_2026.xlsx"
+
+and specifically only the training-period records:
+
+February–August 2026
+
+Do not use September 2026 onward for training.
+
+Inspect the dataset and determine the most appropriate modelling strategy based on:
+
+- Available variables
+- Data volume
+- Sampling frequency
+- Target variable
+- Existing scientific objective
+
+Do not choose an unnecessarily complicated model simply to make the project appear advanced.
+
+Prefer a model that can be scientifically explained during project defense.
+
+---
+
+21. TARGET VARIABLES
+
+Inspect the actual dataset and determine which target variable(s) are appropriate.
+
+Refractivity should be treated as a major target if the dataset contains a valid refractivity variable.
+
+Potential additional targets:
+
+- Temperature
+- Relative Humidity
+- Pressure
+
+Do not invent target variables that do not exist.
+
+Document exactly what the model predicts.
+
+---
+
+22. FEATURE ENGINEERING
+
+Inspect available features.
+
+Potential useful features include:
+
+- Temperature
+- Relative Humidity
+- Pressure
+- Heat Index
+- Hour
+- Day
+- Month
+- Day of week
+- Lag values
+- Rolling statistics
+
+Only introduce features that are scientifically and temporally valid.
+
+Any lag or rolling feature must be constructed without using future information.
+
+---
+
+23. TIME-SERIES VALIDATION
+
+Do NOT use ordinary random train/test splitting if it causes temporal leakage.
+
+Use chronological validation.
+
+Where the amount of data permits, use a time-aware validation strategy.
+
+Clearly report:
+
+- Training period
+- Validation period
+- Holdout period
+
+---
+
+24. MODEL PERFORMANCE
+
+Evaluate the model using appropriate metrics:
+
+- MAE
+- RMSE
+- R²
+- MAPE where appropriate
+- Bias
+
+Generate:
+
+- Actual vs predicted plot
+- Residual plot
+- Error distribution
+- Prediction-over-time plot
+
+Do not fabricate metrics.
+
+---
+
+25. MONTHS-AHEAD FORECASTING
+
+The model must support forecasting beyond a single day.
+
+The primary forecast begins:
+
+September 2026
+
+The dashboard must allow the user to request a future period.
+
+Examples:
+
+- September 2026
+- October 2026
+- November 2026
+- December 2026
+- Multiple future months where supported
+
+The system must clearly state the requested forecast horizon.
+
+If the model's reliable forecast horizon is limited, report this honestly.
+
+Do not claim that a 12-month forecast is equally reliable to a 1-day forecast.
+
+---
+
+26. DAILY FORECASTING
+
+The dashboard must ALSO support selecting a specific day.
+
+Example:
+
+Prediction date: 10 September 2026
+
+Generate hourly predictions:
+
+00:00
+01:00
+02:00
+03:00
+...
+23:00
+
+This should produce up to 24 hourly predictions for the selected day where the model/data supports hourly forecasting.
+
+---
+
+27. DASHBOARD DATE SELECTOR
+
+Create:
+
+Reference / Cutoff Date
+[ Date Picker ]
+
+Prediction Date
+[ Date Picker ]
+
+Forecast Horizon
+[ Daily / Monthly / Custom ]
+
+[ Generate Forecast ]
+
+The system must be dynamic.
+
+Do not hard-code September 2026.
+
+September 2026 should simply be the primary demonstration scenario.
+
+---
+
+28. DAILY FORECAST TABLE
+
+For a selected day display:
+
+Time| Temperature| Relative Humidity| Pressure| Refractivity
+00:00| —| —| —| —
+01:00| —| —| —| —
+...| ...| ...| ...| ...
+23:00| —| —| —| —
+
+Use the correct units from the dataset.
+
+---
+
+29. DAILY FORECAST GRAPHS
+
+Generate dynamic graphs for the selected date:
+
+- Temperature forecast
+- RH forecast
+- Pressure forecast
+- Refractivity forecast
+
+Titles must dynamically show the selected date.
+
+Example:
+
+Refractivity Forecast — 10 September 2026
+
+---
+
+30. DAILY SUMMARY
+
+For the selected forecast date calculate:
+
+Temperature
+
+- Minimum
+- Maximum
+- Mean
+- Time of minimum
+- Time of maximum
+
+Relative Humidity
+
+- Minimum
+- Maximum
+- Mean
+
+Pressure
+
+- Minimum
+- Maximum
+- Mean
+
+Refractivity
+
+- Minimum
+- Maximum
+- Mean
+- Time of minimum
+- Time of maximum
+
+---
+
+31. MONTHLY FORECAST VISUALIZATION
+
+For months-ahead forecasts provide appropriate charts such as:
+
+- Monthly average predicted temperature
+- Monthly average predicted RH
+- Monthly average predicted pressure
+- Monthly average predicted refractivity
+
+Also provide daily/monthly forecast tables as appropriate.
+
+---
+
+32. PREDICTED VS ACTUAL
+
+If September 2026 onward actual observations exist in the lecturer dataset:
+
+DO NOT use them for training.
+
+Instead, after forecasting, compare:
+
+Predicted
+
+vs
+
+Actual
+
+for the corresponding dates.
+
+Calculate:
+
+- MAE
+- RMSE
+- R² where appropriate
+- Bias
+
+Create comparison charts.
+
+This should become an important part of the research results.
+
+---
+
+33. DASHBOARD
+
+Build a professional responsive dashboard.
+
+Recommended sections:
+
+Overview
+
+- Dataset status
+- Model status
+- Data quality
+- Current forecast period
+
+Data Quality
+
+- Missing values
+- Duplicates
+- Outliers
+- Data completeness
+
+Exploratory Analysis
+
+- Charts
+- Statistics
+- Correlations
+- April analysis
+- July analysis
+
+Model
+
+- Model type
+- Features
+- Training period
+- Validation metrics
+
+Forecast
+
+- Date selector
+- Months-ahead forecast
+- Daily forecast
+- 24-hour prediction
+
+Predicted vs Actual
+
+- Forecast comparison
+- Accuracy metrics
+
+Reports / Downloads
+
+- Clean Excel
+- Forecast CSV
+- Forecast Excel
+- Reports
+
+---
+
+34. PRESENTATION MODE
+
+Create a clean lecturer-friendly presentation view.
+
+It should clearly show:
+
+DATA
+
+Training period:
+
+"February–August 2026"
+
+Forecast starts:
+
+"September 2026"
+
+MODEL
+
+Model version
+
+Validation metrics
+
+FORECAST
+
+Selected date
+
+Forecast horizon
+
+Predicted values
+
+ANALYSIS
+
+Important charts
+
+DATA QUALITY
+
+Quality indicators
+
+The interface should be professional and easy to explain during a project defense.
+
+---
+
+35. CLEANED DATA FILES
+
+Generate:
+
+"AY_Project_Data_CLEANED_2026.xlsx"
+
+The actual date cells in this file must contain 2026.
+
+If an additional previous/archival dataset is ever supplied later, it may be cleaned separately, but it must not be mixed with the new lecturer data.
+
+---
+
+36. MASTER TRAINING FILE
+
+Generate:
+
+"MASTER_TRAINING_DATA_2026.xlsx"
+
+This file must contain ONLY:
+
+February–August 2026
+
+training-eligible records.
+
+It must not contain September 2026 onward observations.
+
+Also generate:
+
+"MASTER_TRAINING_DATA_2026.csv"
+
+---
+
+37. HOLDOUT FILE
+
+Generate:
+
+"FORECAST_HOLDOUT_DATA_2026.xlsx"
+
+containing:
+
+September 2026 onward
+
+actual observations where available.
+
+Clearly mark:
+
+NOT USED FOR TRAINING
+
+---
+
+38. DATA QUALITY REPORT
+
+Generate:
+
+"Data_Quality_Report.xlsx"
+
+and:
+
+"Data_Quality_and_Exploratory_Analysis_Report.pdf"
+
+The report should include:
+
+1. Dataset description
+2. Cleaning methodology
+3. Date-format correction
+4. 2022 → 2026 date conversion
+5. Training/holdout methodology
+6. Missing data
+7. Duplicates
+8. Outliers
+9. Descriptive statistics
+10. Distribution analysis
+11. Time-series analysis
+12. Correlation analysis
+13. April analysis
+14. July analysis
+15. Key findings
+16. Limitations
+17. Conclusion
+
+---
+
+39. MODEL REPORT
+
+Generate:
+
+"Model_Performance_Report.xlsx"
+
+Include:
+
+- Model
+- Features
+- Target
+- Training period
+- Validation period
+- Holdout period
+- MAE
+- RMSE
+- R²
+- Bias
+- Other relevant metrics
+- Model version
+- Training timestamp
+
+---
+
+40. TRAINING AUDIT
+
+Generate:
+
+"Training_Audit_Report.xlsx"
+
+Document:
+
+- Exact dataset used
+- Number of training observations
+- Date range
+- Features
+- Target
+- Preprocessing
+- Model architecture
+- Hyperparameters
+- Validation strategy
+- Metrics
+- Training timestamp
+
+The audit should make it easy to prove that September 2026 onward was not used for training.
+
+---
+
+41. MODEL VERSIONING
+
+Save the trained model and preprocessing artifacts.
+
+Use a structure such as:
+
+models/
+    2026_new_data/
+        model
+        scaler
+        feature_config
+        metadata
+
+Do not overwrite important model artifacts accidentally.
+
+---
+
+42. EXPORTS
+
+Allow users to download:
+
+- Cleaned dataset
+- Training dataset
+- Holdout dataset
+- Daily forecast CSV
+- Daily forecast Excel
+- Monthly forecast CSV/Excel
+- Data-quality report
+- Model report
+- Analysis report
+
+---
+
+43. DOCUMENTATION
+
+Create a professional:
+
+"README.md"
+
+Explain:
+
+- Project purpose
+- Installation
+- Dataset structure
+- Cleaning process
+- Date conversion
+- Training process
+- Forecasting process
+- Dashboard usage
+- Model evaluation
+- Export functionality
+- Limitations
+
+Also create:
+
+"DATA_PIPELINE_DOCUMENTATION.md"
+
+Document the complete data flow.
+
+---
+
+44. ACADEMIC INTEGRITY
+
+Never fabricate:
+
+- Data
+- Measurements
+- Dates
+- Accuracy
+- Model performance
+- Forecast confidence
+- Missing values
+- Statistical significance
+- Observations
+
+If something cannot be calculated from the data, say so.
+
+If the dataset is insufficient for a particular forecast horizon, report the limitation.
+
+---
+
+45. IMPORTANT DATE-LINE VALIDATION
+
+Before finalizing, verify that the cleaned data actually contains 2026 dates.
+
+Run checks such as:
+
+Minimum year = 2026
+Maximum year = 2026
+
+for the converted source data where appropriate.
+
+Then verify:
+
+Training data:
+dates < September 2026
+
+Holdout:
+dates >= September 2026
+
+Do not simply trust the filenames.
+
+Inspect the actual date values.
+
+---
+
+46. TESTING
+
+Create tests for:
+
+- Date conversion
+- Date parsing
+- Missing values
+- "-9999"
+- Duplicate detection
+- Training/holdout split
+- Leakage prevention
+- Feature generation
+- Model prediction
+- Daily forecast
+- Monthly forecast
+- Dashboard date selection
+- Excel export
+- CSV export
+
+---
+
+47. FINAL PROJECT STRUCTURE
+
+Use an organized structure similar to:
+
+project/
+│
+├── data/
+│   ├── raw/
+│   ├── cleaned/
+│   ├── training/
+│   └── holdout/
+│
+├── models/
+│
+├── reports/
+│
+├── charts/
+│
+├── src/
+│   ├── cleaning/
+│   ├── analysis/
+│   ├── training/
+│   ├── forecasting/
+│   └── evaluation/
+│
+├── dashboard/
+│
+├── tests/
+│
+├── requirements.txt
+├── README.md
+└── DATA_PIPELINE_DOCUMENTATION.md
+
+Adapt this to the framework you choose.
+
+---
+
+48. FINAL ZIP
+
+After successfully completing and testing the system, generate:
+
+"AURA_2026_DATA_ANALYSIS_AND_FORECASTING.zip"
+
+It should contain:
+
+cleaned_data/
+    AY_Project_Data_CLEANED_2026.xlsx
+
+training_data/
+    MASTER_TRAINING_DATA_2026.xlsx
+    MASTER_TRAINING_DATA_2026.csv
+
+holdout_data/
+    FORECAST_HOLDOUT_DATA_2026.xlsx
+
+reports/
+    Data_Quality_Report.xlsx
+    Data_Quality_and_Exploratory_Analysis_Report.pdf
+    Model_Performance_Report.xlsx
+    Training_Audit_Report.xlsx
+
+models/
+    trained_model/
+    preprocessing/
+
+charts/
+
+documentation/
+    README.md
+    DATA_PIPELINE_DOCUMENTATION.md
+
+---
+
+49. FINAL ACCEPTANCE CHECK
+
+Do not tell me the project is complete until all of these are verified:
+
+- [ ] New lecturer Excel successfully imported
+- [ ] Date inconsistencies corrected
+- [ ] Dates explicitly converted from 2022 to 2026
+- [ ] Cleaned Excel contains actual 2026 dates
+- [ ] Invalid data handled
+- [ ] "-9999" handled
+- [ ] Missing values analyzed
+- [ ] Duplicates analyzed
+- [ ] Outliers analyzed
+- [ ] Training data ends before September 2026
+- [ ] September 2026 onward excluded from training
+- [ ] No data leakage
+- [ ] New model trained only from lecturer's new dataset
+- [ ] Model evaluated
+- [ ] Data-quality charts generated
+- [ ] EDA charts generated
+- [ ] April analysis completed
+- [ ] July analysis completed
+- [ ] Correlation analysis completed
+- [ ] September 2026 forecast works
+- [ ] Months-ahead forecasting works where supported
+- [ ] Specific date selection works
+- [ ] 24-hour forecast works
+- [ ] Predicted-vs-actual evaluation works where actual holdout data exists
+- [ ] Dashboard works
+- [ ] Excel exports work
+- [ ] CSV exports work
+- [ ] Reports generated
+- [ ] ZIP generated
+
+---
+
+50. FINAL INSTRUCTION
+
+Start by inspecting the uploaded Excel file carefully.
+
+Do NOT immediately train the model.
+
+First:
+
+LOAD → INSPECT → CLEAN → VALIDATE → CONVERT DATES → ANALYZE → SPLIT → TRAIN → EVALUATE → FORECAST → BUILD DASHBOARD → GENERATE REPORTS → TEST → ZIP
+
+The most important rule is:
+
+«The actual cleaned Excel data must have its 2022 dates changed to 2026, with the month, day and time preserved.»
+
+Then:
+
+«February–August 2026 = training period»
+
+and:
+
+«September 2026 onward = forecasting/holdout period.»
+
+The new lecturer dataset is the only source of data for the new model.
+
+Build everything around these requirements.
