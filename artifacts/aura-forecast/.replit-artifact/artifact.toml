@@ -1,7 +1,7 @@
 kind = "web"
 previewPath = "/"
 title = "AURA 2026 Forecasting Studio"
-description = "A research-ready environmental data analysis and refractivity forecasting dashboard built from the lecturer-provided Excel dataset. It surfaces data quality, exploratory analysis, model validation, daily and monthly forecasts, holdout evaluation, and downloadable research outputs."
+description = "A research-ready environmental data analysis and refractivity forecasting dashboard. It surfaces data quality, exploratory analysis, model validation, daily and monthly forecasts, holdout evaluation, and downloadable research outputs."
 version = "1.0.0"
 id = "artifacts/aura-forecast"
 router = "path"

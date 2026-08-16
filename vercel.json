@@ -1,0 +1,12 @@
+{
+  "framework": "vite",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm --filter @workspace/aura-forecast run build",
+  "outputDirectory": "artifacts/aura-forecast/dist/public",
+  "rewrites": [
+    {
+      "source": "/((?!assets/|exports/|favicon.svg|robots.txt).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
