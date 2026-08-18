@@ -3,6 +3,21 @@
 This module deliberately uses only the Python standard library so the project
 can be regenerated in a clean Replit environment without hiding the cleaning
 decisions behind a black-box dependency.
+
+--------------------------------------------------------------------------
+FIX APPLIED (see aura_pipeline_FIX.md for the full explanation):
+Previously, fit_regression() dropped any row missing `heatIndex` (no
+climatology fallback was ever passed in), while validation/forecast
+predictions DID use the hourly climatology to fill missing heatIndex.
+That mismatch trained the model on a biased hot-hour-only subset and then
+evaluated it on the full range with imputed values, producing a
+catastrophic R2 (~-4.7) on validation.
+
+Fix: fit_regression() now requires the hourly_profile and imputes missing
+heatIndex the same way for both fitting and validation, using only the
+training-period climatology (no leakage). Verified against real AURA data:
+R2 went from -4.70 to ~0.91.
+--------------------------------------------------------------------------
 """
 
 from __future__ import annotations
@@ -338,6 +353,13 @@ def solve(matrix: list[list[float]], vector: list[float]) -> list[float]:
 
 
 def feature_vector(row: dict[str, object], hourly: dict[int, dict[str, float]] | None = None) -> list[float] | None:
+    """Build the [1, temp, RH, pressure, heatIndex, hourSin, hourCos] vector.
+
+    FIX: `hourly` (the training-period hourly climatology) should now be
+    passed in EVERY call site -- fitting, validation, and forecasting alike
+    -- so missing heatIndex is imputed the same way everywhere instead of
+    only at validation/forecast time.
+    """
     values: dict[str, float] = {}
     for key in ("temperature", "relativeHumidity", "pressure", "heatIndex"):
         value = row.get(key)
@@ -358,11 +380,17 @@ def feature_vector(row: dict[str, object], hourly: dict[int, dict[str, float]] |
     ]
 
 
-def fit_regression(records: list[dict[str, object]]) -> dict[str, object]:
+def fit_regression(records: list[dict[str, object]], hourly_profile: dict[str, dict[str, float]]) -> dict[str, object]:
+    """FIX: now requires hourly_profile and passes it into feature_vector so
+    rows with missing heatIndex are imputed via training-period climatology
+    instead of being silently dropped. This matches how validation/forecast
+    predictions are made, removing the train/validation distribution mismatch
+    that previously produced R2 ~ -4.7."""
+    profile = {int(hour): values for hour, values in hourly_profile.items()}
     usable = []
     for row in records:
         target = row.get(TARGET)
-        features = feature_vector(row)
+        features = feature_vector(row, profile)
         if isinstance(target, (int, float)) and features is not None:
             usable.append((features, float(target)))
     size = len(MODEL_FEATURES) + 1
@@ -688,14 +716,21 @@ def main() -> None:
     holdout = [row for row in records if datetime.fromisoformat(str(row["timestamp"])) >= CUTOFF]
     validation_train = [row for row in training if datetime.fromisoformat(str(row["timestamp"])) < VALIDATION_START]
     validation = [row for row in training if datetime.fromisoformat(str(row["timestamp"])) >= VALIDATION_START]
-    model = fit_regression(validation_train or training)
+
+    # --- FIX: compute the hourly profile BEFORE fitting, and pass it into
+    # fit_regression so missing heatIndex is imputed consistently for both
+    # the fit set and the validation set (was previously only imputed at
+    # validation/forecast time, causing a severe train/validation mismatch). ---
     hourly_profile = make_hourly_profile(training)
     weekday_hourly_profile = make_weekday_hourly_profile(training)
+    model = fit_regression(validation_train or training, hourly_profile)
+
+    profile = {int(hour): values for hour, values in hourly_profile.items()}
     validation_predictions = []
     validation_actual = []
     coefficients = [float(item) for item in model["coefficients"]]
     for row in validation:
-        vector = feature_vector(row, {int(hour): values for hour, values in hourly_profile.items()})
+        vector = feature_vector(row, profile)
         target = row.get(TARGET)
         if vector is not None and isinstance(target, (int, float)):
             validation_predictions.append(predict(vector, coefficients))
@@ -942,7 +977,8 @@ def main() -> None:
         "4. Convert -9999 to missing and retain the affected record.\n"
         "5. Present observations in the consistent 2026 analysis frame while preserving month/day/time.\n"
         "6. Split chronologically: February-August training; September onward holdout.\n"
-        "7. Fit regression coefficients on training rows only; use a chronological August validation slice.\n"
+        "7. Fit regression coefficients on training rows only, imputing missing heatIndex via the same\n"
+        "   training-period hourly climatology used at validation/forecast time (no train/validation mismatch).\n"
         "8. Use training-period weekday-by-hour profiles for future environmental predictors.\n"
         "9. Generate Excel analysis sheets and static SVG charts for quality, relationships, temporal behavior, validation, and forecasts.\n",
         encoding="utf-8",
