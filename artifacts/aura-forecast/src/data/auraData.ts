@@ -29,13 +29,13 @@ export const auraData = {
     "target": "refractivity",
     "modelType": "Chronological multivariate linear regression",
     "modelFeatureCount": 6,
-    "modelFitRows": 78838,
+    "modelFitRows": 144748,
     "validationMetrics": {
-      "mae": 26.136164,
-      "rmse": 31.693458,
-      "r2": -4.695695,
-      "bias": -23.726993,
-      "mape": 7.119203,
+      "mae": 3.193933,
+      "rmse": 3.972661,
+      "r2": 0.910511,
+      "bias": 1.037282,
+      "mape": 0.883242,
       "n": 58217
     }
   },
@@ -3876,15 +3876,15 @@ export const auraData = {
   },
   "model": {
     "coefficients": [
-      -152.0290908426,
-      -7.9003106551,
-      1.038632366,
-      0.3811135969,
-      9.9039830323,
-      0.182571476,
-      0.5383422893
+      -118.4534251787,
+      3.784600802,
+      1.5005092066,
+      0.3211986203,
+      -1.8700827155,
+      -2.3135215409,
+      -2.8327002494
     ],
-    "usableRows": 78838,
+    "usableRows": 144748,
     "features": [
       "temperature",
       "relativeHumidity",
@@ -3895,11 +3895,11 @@ export const auraData = {
     ],
     "target": "refractivity",
     "validation": {
-      "mae": 26.136164,
-      "rmse": 31.693458,
-      "r2": -4.695695,
-      "bias": -23.726993,
-      "mape": 7.119203,
+      "mae": 3.193933,
+      "rmse": 3.972661,
+      "r2": 0.910511,
+      "bias": 1.037282,
+      "mape": 0.883242,
       "n": 58217
     },
     "validationStart": "2026-08-03 00:00:18",
@@ -5077,7 +5077,7 @@ export const auraData = {
       "relativeHumidity": 70.771741,
       "pressure": 970.099624,
       "heatIndex": 23.495936,
-      "refractivity": 329.2403
+      "refractivity": 346.0705
     },
     {
       "timestamp": "2026-09-01 01:00:00",
@@ -5088,7 +5088,7 @@ export const auraData = {
       "relativeHumidity": 71.991273,
       "pressure": 969.343185,
       "heatIndex": 23.259301,
-      "refractivity": 329.9432
+      "refractivity": 346.6209
     },
     {
       "timestamp": "2026-09-01 02:00:00",
@@ -5099,7 +5099,7 @@ export const auraData = {
       "relativeHumidity": 73.502626,
       "pressure": 968.949463,
       "heatIndex": 22.940393,
-      "refractivity": 330.0819
+      "refractivity": 348.1796
     },
     {
       "timestamp": "2026-09-01 03:00:00",
@@ -5110,7 +5110,7 @@ export const auraData = {
       "relativeHumidity": 74.874234,
       "pressure": 969.158344,
       "heatIndex": 23.171106,
-      "refractivity": 332.3108
+      "refractivity": 350.5689
     },
     {
       "timestamp": "2026-09-01 04:00:00",
@@ -5121,7 +5121,7 @@ export const auraData = {
       "relativeHumidity": 74.267074,
       "pressure": 969.510289,
       "heatIndex": 23.164964,
-      "refractivity": 332.9734
+      "refractivity": 349.3775
     },
     {
       "timestamp": "2026-09-01 05:00:00",
@@ -5132,7 +5132,7 @@ export const auraData = {
       "relativeHumidity": 74.118768,
       "pressure": 970.075745,
       "heatIndex": 22.74643,
-      "refractivity": 330.4197
+      "refractivity": 349.785
     },
     {
       "timestamp": "2026-09-01 06:00:00",
@@ -5143,7 +5143,7 @@ export const auraData = {
       "relativeHumidity": 73.831917,
       "pressure": 970.526118,
       "heatIndex": 22.747001,
-      "refractivity": 329.173
+      "refractivity": 350.6281
     },
     {
       "timestamp": "2026-09-01 07:00:00",
@@ -5154,7 +5154,7 @@ export const auraData = {
       "relativeHumidity": 69.520525,
       "pressure": 971.114795,
       "heatIndex": 23.33741,
-      "refractivity": 326.7314
+      "refractivity": 345.9192
     },
     {
       "timestamp": "2026-09-01 08:00:00",
@@ -5165,7 +5165,7 @@ export const auraData = {
       "relativeHumidity": 69.1575,
       "pressure": 971.792772,
       "heatIndex": 24.296746,
-      "refractivity": 328.4732
+      "refractivity": 348.3018
     },
     {
       "timestamp": "2026-09-01 09:00:00",
@@ -5176,7 +5176,7 @@ export const auraData = {
       "relativeHumidity": 64.764636,
       "pressure": 971.718622,
       "heatIndex": 25.030172,
-      "refractivity": 325.6191
+      "refractivity": 343.8497
     },
     {
       "timestamp": "2026-09-01 10:00:00",
@@ -5187,7 +5187,7 @@ export const auraData = {
       "relativeHumidity": 57.002109,
       "pressure": 970.977891,
       "heatIndex": 26.161077,
-      "refractivity": 322.009
+      "refractivity": 333.8168
     },
     {
       "timestamp": "2026-09-01 11:00:00",
@@ -5198,7 +5198,7 @@ export const auraData = {
       "relativeHumidity": 53.322216,
       "pressure": 970.275669,
       "heatIndex": 26.819623,
-      "refractivity": 316.2968
+      "refractivity": 331.5338
     },
     {
       "timestamp": "2026-09-01 12:00:00",
@@ -5209,7 +5209,7 @@ export const auraData = {
       "relativeHumidity": 47.121092,
       "pressure": 969.150772,
       "heatIndex": 27.156796,
-      "refractivity": 306.1734
+      "refractivity": 325.0595
     },
     {
       "timestamp": "2026-09-01 13:00:00",
@@ -5220,7 +5220,7 @@ export const auraData = {
       "relativeHumidity": 41.707615,
       "pressure": 968.273112,
       "heatIndex": 28.242852,
-      "refractivity": 300.0552
+      "refractivity": 320.3419
     },
     {
       "timestamp": "2026-09-01 14:00:00",
@@ -5231,7 +5231,7 @@ export const auraData = {
       "relativeHumidity": 45.74339,
       "pressure": 968.136528,
       "heatIndex": 28.720987,
-      "refractivity": 304.8776
+      "refractivity": 327.6807
     },
     {
       "timestamp": "2026-09-01 15:00:00",
@@ -5242,7 +5242,7 @@ export const auraData = {
       "relativeHumidity": 46.580774,
       "pressure": 967.719689,
       "heatIndex": 27.880798,
-      "refractivity": 308.3337
+      "refractivity": 325.1251
     },
     {
       "timestamp": "2026-09-01 16:00:00",
@@ -5253,7 +5253,7 @@ export const auraData = {
       "relativeHumidity": 49.766859,
       "pressure": 967.641062,
       "heatIndex": 27.207817,
-      "refractivity": 310.1588
+      "refractivity": 328.4632
     },
     {
       "timestamp": "2026-09-01 17:00:00",
@@ -5264,7 +5264,7 @@ export const auraData = {
       "relativeHumidity": 55.714137,
       "pressure": 968.3945,
       "heatIndex": 26.526403,
-      "refractivity": 316.834
+      "refractivity": 335.1708
     },
     {
       "timestamp": "2026-09-01 18:00:00",
@@ -5275,7 +5275,7 @@ export const auraData = {
       "relativeHumidity": 62.921389,
       "pressure": 969.11654,
       "heatIndex": 25.911451,
-      "refractivity": 324.2487
+      "refractivity": 344.025
     },
     {
       "timestamp": "2026-09-01 19:00:00",
@@ -5286,7 +5286,7 @@ export const auraData = {
       "relativeHumidity": 69.327201,
       "pressure": 970.09423,
       "heatIndex": 25.083106,
-      "refractivity": 327.7341
+      "refractivity": 352.5238
     },
     {
       "timestamp": "2026-09-01 20:00:00",
@@ -5297,7 +5297,7 @@ export const auraData = {
       "relativeHumidity": 71.998102,
       "pressure": 970.778455,
       "heatIndex": 24.819582,
-      "refractivity": 331.0025
+      "refractivity": 355.0386
     },
     {
       "timestamp": "2026-09-01 21:00:00",
@@ -5308,7 +5308,7 @@ export const auraData = {
       "relativeHumidity": 69.84602,
       "pressure": 970.925783,
       "heatIndex": 23.938245,
-      "refractivity": 325.5971
+      "refractivity": 349.9819
     },
     {
       "timestamp": "2026-09-01 22:00:00",
@@ -5319,7 +5319,7 @@ export const auraData = {
       "relativeHumidity": 70.63538,
       "pressure": 970.849908,
       "heatIndex": 23.453257,
-      "refractivity": 325.0272
+      "refractivity": 349.5296
     },
     {
       "timestamp": "2026-09-01 23:00:00",
@@ -5330,7 +5330,7 @@ export const auraData = {
       "relativeHumidity": 72.205043,
       "pressure": 970.383701,
       "heatIndex": 23.076122,
-      "refractivity": 323.9097
+      "refractivity": 351.0883
     }
   ],
   "monthlyForecast": [
@@ -5341,7 +5341,7 @@ export const auraData = {
       "relativeHumidity": 66.5113,
       "pressure": 969.84,
       "heatIndex": 25.0688,
-      "refractivity": 327.6332,
+      "refractivity": 345.2927,
       "hours": 720
     },
     {
@@ -5351,7 +5351,7 @@ export const auraData = {
       "relativeHumidity": 66.7922,
       "pressure": 969.8656,
       "heatIndex": 25.087,
-      "refractivity": 328.2276,
+      "refractivity": 345.6343,
       "hours": 744
     },
     {
@@ -5361,7 +5361,7 @@ export const auraData = {
       "relativeHumidity": 66.7181,
       "pressure": 969.8753,
       "heatIndex": 25.0899,
-      "refractivity": 328.0229,
+      "refractivity": 345.5977,
       "hours": 720
     },
     {
@@ -5371,7 +5371,7 @@ export const auraData = {
       "relativeHumidity": 66.7119,
       "pressure": 969.8627,
       "heatIndex": 25.0723,
-      "refractivity": 327.9847,
+      "refractivity": 345.5466,
       "hours": 744
     }
   ],

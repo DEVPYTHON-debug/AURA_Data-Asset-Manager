@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 4502 >>
+<< /Length 4497 >>
 stream
 BT
 /F1 10 Tf
@@ -97,19 +97,19 @@ BT
 0 -14 Td
 (Model: Chronological multivariate linear regression targeting refractivity. Validation used) Tj
 0 -14 Td
-(the final training month as a chronological validation period. Metrics: MAE=26.136164,) Tj
+(the final training month as a chronological validation period. Metrics: MAE=3.193933,) Tj
 0 -14 Td
-(RMSE=31.693458, R2=-4.695695, bias=-23.726993, MAPE=7.119203.) Tj
+(RMSE=3.972661, R2=0.910511, bias=1.037282, MAPE=0.883242.) Tj
 0 -14 Td
 (Forecast statistics: monthly refractivity and environmental summaries were September 2026:) Tj
 0 -14 Td
-(temperature 26.2418, RH 66.5113, pressure 969.84, refractivity 327.6332; October 2026:) Tj
+(temperature 26.2418, RH 66.5113, pressure 969.84, refractivity 345.2927; October 2026:) Tj
 0 -14 Td
-(temperature 26.2275, RH 66.7922, pressure 969.8656, refractivity 328.2276; November 2026:) Tj
+(temperature 26.2275, RH 66.7922, pressure 969.8656, refractivity 345.6343; November 2026:) Tj
 0 -14 Td
-(temperature 26.2478, RH 66.7181, pressure 969.8753, refractivity 328.0229; December 2026:) Tj
+(temperature 26.2478, RH 66.7181, pressure 969.8753, refractivity 345.5977; December 2026:) Tj
 0 -14 Td
-(temperature 26.2292, RH 66.7119, pressure 969.8627, refractivity 327.9847. Future) Tj
+(temperature 26.2292, RH 66.7119, pressure 969.8627, refractivity 345.5466. Future) Tj
 0 -14 Td
 (environmental predictors use reproducible training-period weekday-by-hour profiles, with the) Tj
 0 -14 Td
@@ -144,10 +144,10 @@ xref
 0000000121 00000 n 
 0000000191 00000 n 
 0000000317 00000 n 
-0000004871 00000 n 
-0000004997 00000 n 
+0000004866 00000 n 
+0000004992 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-5446
+5441
 %%EOF

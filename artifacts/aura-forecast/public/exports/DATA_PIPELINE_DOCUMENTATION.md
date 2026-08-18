@@ -6,6 +6,7 @@
 4. Convert -9999 to missing and retain the affected record.
 5. Present observations in the consistent 2026 analysis frame while preserving month/day/time.
 6. Split chronologically: February-August training; September onward holdout.
-7. Fit regression coefficients on training rows only; use a chronological August validation slice.
+7. Fit regression coefficients on training rows only, imputing missing heatIndex via the same
+   training-period hourly climatology used at validation/forecast time (no train/validation mismatch).
 8. Use training-period weekday-by-hour profiles for future environmental predictors.
 9. Generate Excel analysis sheets and static SVG charts for quality, relationships, temporal behavior, validation, and forecasts.
