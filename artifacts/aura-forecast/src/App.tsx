@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Area,
@@ -26,6 +26,7 @@ import {
   ChevronDown,
   CircleHelp,
   CloudDownload,
+  Clock3,
   Database,
   FileArchive,
   FileBarChart,
@@ -43,7 +44,9 @@ import {
   RefreshCw,
   ShieldCheck,
   Sparkles,
+  Sun,
   Table2,
+  Moon,
   X,
   XCircle,
 } from "lucide-react";
@@ -71,6 +74,62 @@ type ForecastRow = {
   heatIndex: number | null;
   refractivity: number | null;
 };
+type ForecastKey = "temperature" | "relativeHumidity" | "pressure" | "refractivity";
+type ForecastSettings = {
+  horizon: string;
+  referenceDate: string;
+  predictionDate: string;
+  currentDateTime: string;
+  setHorizon: (value: string) => void;
+  setReferenceDate: (value: string) => void;
+  setPredictionDate: (value: string) => void;
+  setCurrentDateTime: (value: string) => void;
+};
+
+type ThemeMode = "light" | "dark";
+type ThemeSettings = {
+  theme: ThemeMode;
+  toggleTheme: () => void;
+};
+
+const ForecastSettingsContext = createContext<ForecastSettings | null>(null);
+const ThemeContext = createContext<ThemeSettings | null>(null);
+
+function useForecastSettings(): ForecastSettings {
+  const settings = useContext(ForecastSettingsContext);
+  if (!settings) throw new Error("Forecast settings are only available inside the app shell.");
+  return settings;
+}
+
+function useThemeSettings(): ThemeSettings {
+  const settings = useContext(ThemeContext);
+  if (!settings) throw new Error("Theme settings are only available inside the app shell.");
+  return settings;
+}
+
+function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window === "undefined") return "light";
+    const storedTheme = window.localStorage.getItem("aura-theme");
+    if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.style.colorScheme = theme;
+    window.localStorage.setItem("aura-theme", theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme((value) => value === "light" ? "dark" : "light");
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
+}
+
+function ForecastSettingsProvider({ children }: { children: ReactNode }) {
+  const [horizon, setHorizon] = useState("24 hours");
+  const [referenceDate, setReferenceDate] = useState("2026-08-31");
+  const [predictionDate, setPredictionDate] = useState("2026-09-01");
+  const [currentDateTime, setCurrentDateTime] = useState("2026-09-01T12:00");
+  return <ForecastSettingsContext.Provider value={{ horizon, referenceDate, predictionDate, currentDateTime, setHorizon, setReferenceDate, setPredictionDate, setCurrentDateTime }}>{children}</ForecastSettingsContext.Provider>;
+}
 
 const navItems: Array<{ href: string; label: string; detail: string; icon: IconType }> = [
   { href: "/", label: "Overview", detail: "Instrument readout", icon: Home },
@@ -100,6 +159,16 @@ function shortDate(value: string): string {
   return value.slice(5);
 }
 
+function formatFocusDate(value: string): string {
+  const [date, time] = value.split("T");
+  return `${date ?? value}${time ? ` · ${time}` : ""}`;
+}
+
+function localTimestamp(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 function csvDownload(filename: string, rows: Array<Record<string, unknown>>): void {
   const keys = Object.keys(rows[0] ?? {});
   const csv = [keys.join(","), ...rows.map((row) => keys.map((key) => JSON.stringify(row[key] ?? "")).join(","))].join("\n");
@@ -114,11 +183,13 @@ function makeForecast(dateValue: string, horizon: string): ForecastRow[] {
   const count = horizon === "24 hours" ? 24 : horizon === "7 days" ? 24 * 7 : 24 * 30;
   const start = new Date(`${dateValue}T00:00:00`);
   const profile = auraData.model.hourlyProfile as Record<string, Record<string, number>>;
+  const weekdayProfile = (auraData.model as unknown as { weekdayHourlyProfile?: Record<string, Record<string, number>> }).weekdayHourlyProfile;
   const coefficients = auraData.model.coefficients as readonly number[];
   return Array.from({ length: count }, (_, index) => {
     const current = new Date(start.getTime() + index * 60 * 60 * 1000);
     const hour = current.getHours();
-    const values = profile[String(hour)] ?? {};
+    const weekday = (current.getDay() + 6) % 7;
+    const values = weekdayProfile?.[String(weekday * 24 + hour)] ?? profile[String(hour)] ?? {};
     const temperature = values.temperature ?? null;
     const relativeHumidity = values.relativeHumidity ?? null;
     const pressure = values.pressure ?? null;
@@ -128,7 +199,7 @@ function makeForecast(dateValue: string, horizon: string): ForecastRow[] {
       ? vector.reduce((sum, value, position) => sum + value * (coefficients[position] ?? 0), 0)
       : null;
     return {
-      timestamp: current.toISOString().replace("T", " ").slice(0, 19),
+      timestamp: localTimestamp(current),
       time: current.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }),
       temperature,
       relativeHumidity,
@@ -137,6 +208,29 @@ function makeForecast(dateValue: string, horizon: string): ForecastRow[] {
       refractivity: typeof refractivity === "number" ? Number(refractivity.toFixed(4)) : null,
     };
   });
+}
+
+function forecastFocus(rows: ForecastRow[], currentDateTime: string, predictionDate: string): ForecastRow {
+  const focusTimestamp = `${currentDateTime.replace("T", " ")}:00`;
+  const exact = rows.find((row) => row.timestamp === focusTimestamp);
+  if (exact) return exact;
+  const focusDate = currentDateTime.slice(0, 10) || predictionDate;
+  const focusHour = Number(currentDateTime.slice(11, 13));
+  const focusRows = makeForecast(focusDate, "24 hours");
+  return focusRows.find((row) => Number(row.timestamp.slice(11, 13)) === focusHour) ?? focusRows[0] ?? rows[0] ?? {
+    timestamp: `${focusDate} 00:00:00`,
+    time: "00:00",
+    temperature: null,
+    relativeHumidity: null,
+    pressure: null,
+    heatIndex: null,
+    refractivity: null,
+  };
+}
+
+function localDateTimeValue(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function Badge({ children, tone = "slate", dot = false }: { children: ReactNode; tone?: Tone; dot?: boolean }) {
@@ -171,23 +265,26 @@ function TimelineBand() {
   return <Panel className="timeline-panel" accent="teal"><div className="timeline-head"><div><div className="eyebrow">Research frame</div><h2>One source. One honest split.</h2></div><Badge tone="teal" dot>Time-aligned</Badge></div><div className="timeline-track" aria-label="AURA 2026 date split"><div className="timeline-line"><span /></div>{timelineItems.map((item, index) => <div className={`timeline-stop stop-${item.tone}`} key={item.label}><span className="timeline-dot">{index + 1}</span><div><div className="timeline-state">{item.state}</div><strong>{item.label}</strong><p>{item.value}</p></div></div>)}</div><div className="timeline-caption"><Info size={15} /><span>All records share a consistent 2026 analysis frame while preserving their within-year time structure.</span></div></Panel>;
 }
 
-function SignalCard({ label, field, icon: Icon, tone, value, unit }: { label: string; field: string; icon: IconType; tone: Tone; value: unknown; unit: string }) {
-  return <Panel className="signal-card" accent={tone}><div className="signal-icon"><Icon size={18} /></div><div className="signal-label">{label}</div><div className="signal-value">{number(value)} <small>{unit}</small></div><div className="signal-field">{field}</div><div className="signal-rule" /><span className="signal-status"><Check size={13} /> measured mean</span></Panel>;
+function SignalCard({ label, field, icon: Icon, tone, value, unit, status = "forecast snapshot" }: { label: string; field: string; icon: IconType; tone: Tone; value: unknown; unit: string; status?: string }) {
+  return <Panel className="signal-card" accent={tone}><div className="signal-icon"><Icon size={18} /></div><div className="signal-label">{label}</div><div className="signal-value">{number(value)} <small>{unit}</small></div><div className="signal-field">{field}</div><div className="signal-rule" /><span className="signal-status"><Check size={13} /> {status}</span></Panel>;
 }
 
 function Overview({ goToReports }: { goToReports: () => void }) {
   const summary = auraData.summary;
+  const { horizon, predictionDate, currentDateTime } = useForecastSettings();
+  const forecastRows = useMemo(() => makeForecast(predictionDate, horizon), [predictionDate, horizon]);
+  const focus = useMemo(() => forecastFocus(forecastRows, currentDateTime, predictionDate), [forecastRows, currentDateTime, predictionDate]);
   const series = auraData.daily.refractivity.map((item) => ({ date: shortDate(item.period), refractivity: item.value }));
   return <div className="page-stack">
     <PageTitle eyebrow="AURA / 2026 · instrument overview" title="Forecasting, without the shortcuts." description="A research-ready view of atmospheric refractivity forecasting, built around a traceable workbook and a chronological evaluation frame." actions={<button type="button" className="outline-button" onClick={goToReports}><CloudDownload size={15} /> Export center</button>} />
     <div className="overview-hero page-enter delay-1"><div className="hero-copy"><div className="hero-tag"><span className="pulse-dot" /> Live instrument readout</div><h2>Read the atmosphere<br /><em>before it moves.</em></h2><p>AURA keeps the boundary between measured history and future forecast visible at every step. No hidden joins. No random split. No manufactured certainty.</p><div className="hero-meta"><div><span>Dataset</span><strong>{number(summary.observationRows, 0)} observations</strong></div><div><span>Target</span><strong>Refractivity</strong></div><div><span>Evaluation</span><strong>{summary.holdoutRows.toLocaleString()} holdout rows</strong></div></div></div><div className="hero-graphic" aria-label="Atmospheric measurement schematic"><div className="orbital-ring ring-one" /><div className="orbital-ring ring-two" /><div className="orbital-ring ring-three" /><div className="hero-orb"><span>R<sub>e</sub></span><small>refractivity</small></div><div className="graphic-label label-top">ATMOSPHERIC<br /><b>MEASURE</b></div><div className="graphic-label label-bottom">2026<br /><b>OUTLOOK</b></div></div></div>
     <TimelineBand />
-    <div className="section-heading page-enter delay-2"><div><div className="eyebrow">Primary signals</div><h2>The variables that carry the forecast.</h2></div><span className="mono-note">means · valid values</span></div>
+     <div className="section-heading page-enter delay-2"><div><div className="eyebrow">Forecast snapshot</div><h2>The variables at the selected hour.</h2></div><span className="mono-note">{formatFocusDate(focus.timestamp.slice(0, 16))}</span></div>
     <div className="signal-grid page-enter delay-2">
-      <SignalCard label="Temperature" field="Temp. (deg. C)" icon={Gauge} tone="teal" value={qualityByKey.temperature.mean} unit="°C" />
-      <SignalCard label="Pressure" field="Pressure (mbar)" icon={Activity} tone="navy" value={qualityByKey.pressure.mean} unit="mbar" />
-      <SignalCard label="Relative humidity" field="RH (%)" icon={Layers3} tone="amber" value={qualityByKey.relativeHumidity.mean} unit="%" />
-      <SignalCard label="Target · refractivity" field="Refractivity" icon={Sparkles} tone="coral" value={qualityByKey.refractivity.mean} unit="N" />
+       <SignalCard label="Temperature" field="Temp. (deg. C)" icon={Gauge} tone="teal" value={focus.temperature} unit="°C" />
+       <SignalCard label="Pressure" field="Pressure (mbar)" icon={Activity} tone="navy" value={focus.pressure} unit="mbar" />
+       <SignalCard label="Relative humidity" field="RH (%)" icon={Layers3} tone="amber" value={focus.relativeHumidity} unit="%" />
+       <SignalCard label="Target · refractivity" field="Refractivity" icon={Sparkles} tone="coral" value={focus.refractivity} unit="N" />
     </div>
     <div className="dashboard-grid page-enter delay-3">
       <Panel className="forecast-preview" accent="navy"><div className="panel-topline"><div><div className="eyebrow">Observed daily means</div><h2>Measured refractivity</h2></div><Badge tone="teal" dot>Loaded</Badge></div><div className="legend-row"><span><i className="legend-line teal-line" /> observed</span><span><i className="legend-dash" /> Sep cutoff</span></div><div className="actual-chart"><ResponsiveContainer width="100%" height={238}><AreaChart data={series}><CartesianGrid stroke="#e8edf0" vertical={false} /><XAxis dataKey="date" tick={{ fontSize: 9, fill: "#8a98a5" }} minTickGap={28} /><YAxis tick={{ fontSize: 9, fill: "#8a98a5" }} width={38} /><Tooltip contentStyle={{ fontSize: 11, borderRadius: 4, border: "1px solid #d9e0e7" }} /><Area type="monotone" dataKey="refractivity" stroke="#3aa590" fill="#dff2ed" strokeWidth={2} /></AreaChart></ResponsiveContainer></div></Panel>
@@ -243,24 +340,29 @@ function ModelPage({ goToReports }: { goToReports: () => void }) {
 }
 
 function ForecastPage({ goToReports }: { goToReports: () => void }) {
-  const [horizon, setHorizon] = useState("24 hours");
-  const [referenceDate, setReferenceDate] = useState("2026-08-31");
-  const [predictionDate, setPredictionDate] = useState("2026-09-01");
+  const { horizon, referenceDate, predictionDate, currentDateTime, setHorizon, setReferenceDate, setPredictionDate, setCurrentDateTime } = useForecastSettings();
   const rows = useMemo(() => makeForecast(predictionDate, horizon), [predictionDate, horizon]);
   const chartRows = rows.slice(0, 24);
+  const focus = useMemo(() => forecastFocus(rows, currentDateTime, predictionDate), [rows, currentDateTime, predictionDate]);
   const dailySummary = useMemo(() => {
-    const keys: Array<keyof ForecastRow> = ["temperature", "relativeHumidity", "pressure", "refractivity"];
+    const keys: ForecastKey[] = ["temperature", "relativeHumidity", "pressure", "refractivity"];
     return Object.fromEntries(keys.map((key) => {
       const values = rows.map((row) => row[key]).filter((value): value is number => typeof value === "number");
       return [key, { min: Math.min(...values), max: Math.max(...values), mean: values.reduce((sum, value) => sum + value, 0) / values.length }];
     }));
   }, [rows]);
+  const summaryItems: Array<{ key: ForecastKey; label: string; unit: string }> = [
+    { key: "temperature", label: "Temperature", unit: "°C" },
+    { key: "relativeHumidity", label: "Relative humidity", unit: "%" },
+    { key: "pressure", label: "Pressure", unit: "mbar" },
+    { key: "refractivity", label: "Refractivity", unit: "N" },
+  ];
   return <div className="page-stack">
     <PageTitle eyebrow="05 / forecast console" title="Look past the cutoff." description="A controlled forecast console that keeps reference date, prediction horizon, and holdout comparison explicit." actions={<button type="button" className="outline-button" onClick={goToReports}><CloudDownload size={15} /> Export forecast</button>} />
-    <Panel className="forecast-controls page-enter delay-1" accent="teal"><div className="control-title"><div className="eyebrow">Forecast parameters</div><h2>Set the window.</h2></div><label>Reference date<input type="date" value={referenceDate} onChange={(event) => setReferenceDate(event.target.value)} /></label><label>Prediction date<input type="date" min="2026-09-01" value={predictionDate} onChange={(event) => setPredictionDate(event.target.value)} /></label><label>Horizon<select value={horizon} onChange={(event) => setHorizon(event.target.value)}><option>24 hours</option><option>7 days</option><option>30 days</option></select></label><div className="control-note"><CalendarDays size={15} /><span>{referenceDate} → {predictionDate}<small>{horizon} horizon · training climatology inputs</small></span></div></Panel>
+    <Panel className="forecast-controls page-enter delay-1" accent="teal"><div className="control-title"><div className="eyebrow">Forecast parameters</div><h2>Set the window.</h2></div><label>Reference date<input type="date" value={referenceDate} onChange={(event) => setReferenceDate(event.target.value)} /></label><label>Prediction date<input type="date" min="2026-09-01" value={predictionDate} onChange={(event) => { const nextDate = event.target.value; const focusTime = currentDateTime.slice(11) || "12:00"; setPredictionDate(nextDate); setCurrentDateTime(`${nextDate}T${focusTime}`); }} /></label><label>Current date & time<input type="datetime-local" value={currentDateTime} onChange={(event) => setCurrentDateTime(event.target.value)} /><button type="button" className="text-button control-now" onClick={() => { const now = new Date(); const nowValue = localDateTimeValue(now); setCurrentDateTime(nowValue); setPredictionDate(nowValue.slice(0, 10)); }}>Use current time</button></label><label>Horizon<select value={horizon} onChange={(event) => setHorizon(event.target.value)}><option>24 hours</option><option>7 days</option><option>30 days</option></select></label><div className="control-note"><CalendarDays size={15} /><span>{referenceDate} → {predictionDate}<small>{horizon} horizon · focus {focus.time} · training temporal profiles</small></span></div></Panel>
     <div className="forecast-layout page-enter delay-2"><Panel className="forecast-chart" accent="navy"><div className="panel-topline"><div><div className="eyebrow">Hourly forecast</div><h2>Refractivity outlook · {predictionDate}</h2></div><Badge tone="amber" dot>Forecast</Badge></div><div className="legend-row"><span><i className="legend-line amber-line" /> predicted</span><span><i className="legend-dash" /> cutoff protected</span></div><div className="actual-chart"><ResponsiveContainer width="100%" height={260}><LineChart data={chartRows}><CartesianGrid stroke="#e8edf0" vertical={false} /><XAxis dataKey="time" tick={{ fontSize: 9 }} interval={3} /><YAxis tick={{ fontSize: 9 }} /><Tooltip contentStyle={{ fontSize: 11 }} /><Line type="monotone" dataKey="refractivity" stroke="#e3a654" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></Panel><Panel className="outlook-panel" accent="amber"><div className="eyebrow">Monthly outlook</div><h2>September — December 2026</h2><div className="actual-chart"><ResponsiveContainer width="100%" height={170}><BarChart data={Array.from(auraData.monthlyForecast)}><CartesianGrid stroke="#f0e7d9" vertical={false} /><XAxis dataKey="key" tick={{ fontSize: 9 }} /><YAxis tick={{ fontSize: 9 }} /><Tooltip contentStyle={{ fontSize: 11 }} /><Bar dataKey="refractivity" fill="#d76e61" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></div><div className="outlook-months"><span className="past">AUG</span><b>SEP</b><span>OCT</span><span>NOV</span><span>DEC</span></div></Panel></div>
-    <Panel className="forecast-table-panel page-enter delay-3"><SectionHeading kicker="Daily forecast table" title={`Hourly values · ${predictionDate}`} note={`${rows.length} rows generated`} /><div className="daily-summary">{Object.entries(dailySummary).map(([key, value]) => <div key={key}><span>{key.replace(/([A-Z])/g, " $1")}</span><b>{number(value.mean)}</b><small>{number(value.min)} — {number(value.max)}</small></div>)}</div><div className="data-table-wrap"><table className="data-table"><thead><tr><th>Time</th><th>Temperature</th><th>RH</th><th>Pressure</th><th>Refractivity</th></tr></thead><tbody>{rows.slice(0, 24).map((row) => <tr key={row.timestamp}><td>{row.time}</td><td>{number(row.temperature)} °C</td><td>{number(row.relativeHumidity)}%</td><td>{number(row.pressure)} mbar</td><td>{number(row.refractivity)} N</td></tr>)}</tbody></table></div><button type="button" className="text-button" onClick={() => csvDownload(`AURA_${predictionDate}_forecast.csv`, rows)}>Download this forecast CSV <ArrowDownToLine size={14} /></button></Panel>
-    <DataNote>Future environmental predictors are training-period hour-of-day climatology. This keeps the forecast free from holdout leakage, but it also means the longer horizon is exploratory rather than an operational weather forecast.</DataNote>
+     <Panel className="forecast-table-panel page-enter delay-3"><SectionHeading kicker="Forecast snapshot & table" title={`Hourly values · ${predictionDate}`} note={`${rows.length} rows generated · focus ${formatFocusDate(focus.timestamp.slice(0, 16))}`} /><div className="daily-summary">{summaryItems.map(({ key, label, unit }) => { const stats = dailySummary[key]; return <div key={key}><span>{label}</span><b>{number(focus[key])} <small>{unit}</small></b><small>range {number(stats?.min)} — {number(stats?.max)}</small></div>; })}</div><div className="data-table-wrap"><table className="data-table"><thead><tr><th>Time</th><th>Temperature</th><th>RH</th><th>Pressure</th><th>Refractivity</th></tr></thead><tbody>{rows.slice(0, 24).map((row) => <tr key={row.timestamp} className={row.timestamp === focus.timestamp ? "forecast-focus-row" : ""}><td>{row.time}</td><td>{number(row.temperature)} °C</td><td>{number(row.relativeHumidity)}%</td><td>{number(row.pressure)} mbar</td><td>{number(row.refractivity)} N</td></tr>)}</tbody></table></div><button type="button" className="text-button" onClick={() => csvDownload(`AURA_${predictionDate}_forecast.csv`, rows)}>Download this forecast CSV <ArrowDownToLine size={14} /></button></Panel>
+     <DataNote>Environmental predictors are selected from training-period temporal profiles, so the focused hour and date remain tied to the same leakage-safe model inputs used in the downloaded forecast.</DataNote>
   </div>;
 }
 
@@ -271,12 +373,12 @@ function ReportsPage() {
     { title: "Training dataset", detail: "February — August 2026 training frame", filename: "MASTER_TRAINING_DATA_2026.xlsx", icon: Database },
     { title: "Holdout dataset", detail: "September 2026 onward · not used for training", filename: "FORECAST_HOLDOUT_DATA_2026.xlsx", icon: Table2 },
     { title: "Forecast exports", detail: "Daily CSV/XLSX and monthly outlook", filename: "DAILY_FORECAST_2026-09-01.xlsx", icon: Activity },
-    { title: "Research report", detail: "Methods, quality, findings, and limitations", filename: "Data_Quality_and_Exploratory_Analysis_Report.pdf", icon: FileBarChart },
+    { title: "Research report", detail: "Methods, quality, findings, statistics, and charts", filename: "Data_Quality_and_Exploratory_Analysis_Report.pdf", icon: FileBarChart },
   ];
   return <div className="page-stack">
     <PageTitle eyebrow="06 / reports & exports" title="Leave with a defensible package." description="Every deliverable has a named place, a clear date frame, and a truthful status." actions={<a className="outline-button" href={`${exportsBase}AURA_2026_DATA_ANALYSIS_AND_FORECASTING.zip`} download><FileArchive size={15} /> Download ZIP</a>} />
     {message && <div className="toast-message page-enter" role="status"><Info size={15} /><span>{message}</span><button type="button" onClick={() => setMessage("")} aria-label="Dismiss export message"><X size={15} /></button></div>}
-    <div className="package-status page-enter delay-1"><div className="package-icon"><FileArchive size={22} /></div><div><div className="eyebrow">Package status</div><h2>Assembly complete for the analysis dataset.</h2><p>15 outputs are bundled, including cleaned data, training/holdout splits, model audit, reports, forecast exports, and documentation.</p></div><Badge tone="teal" dot>Ready</Badge></div>
+    <div className="package-status page-enter delay-1"><div className="package-icon"><FileArchive size={22} /></div><div><div className="eyebrow">Package status</div><h2>Assembly complete for the analysis dataset.</h2><p>15 deliverables are bundled, including cleaned data, training/holdout splits, model audit, reports, forecast exports, documentation, and 10 static analytics charts.</p></div><Badge tone="teal" dot>Ready</Badge></div>
     <div className="report-list page-enter delay-2">{reports.map(({ title, detail, filename, icon: Icon }, index) => <Panel className="report-row" key={title}><div className="report-index">0{index + 1}</div><div className="report-icon"><Icon size={18} /></div><div className="report-copy"><h3>{title}</h3><p>{detail}</p></div><Badge tone="teal">Available</Badge><ExportLink filename={filename} label={`Export ${title}`} /></Panel>)}</div>
     <Panel className="provenance-panel page-enter delay-3" accent="teal"><SectionHeading kicker="Provenance note" title="The package tells the same story as the dashboard." /><div className="provenance-grid"><div><span>INPUT</span><b>Traceable workbook</b><p>No external joins, substitutions, or synthetic values.</p></div><div><span>TIME FRAME</span><b>Consistent 2026 view</b><p>Within-year month, day, and time structure preserved.</p></div><div><span>SPLIT</span><b>Feb–Aug / Sep onward</b><p>Training first. Holdout remains untouched for evaluation.</p></div></div><button type="button" className="text-button" onClick={() => setMessage("All file links point to generated outputs from this workbook; no placeholder files are used.")}>Verify package provenance <ShieldCheck size={14} /></button></Panel>
   </div>;
@@ -290,9 +392,17 @@ function Sidebar({ collapsed, onCollapse }: { collapsed: boolean; onCollapse: ()
 function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [now, setNow] = useState(() => new Date());
   const [location] = useLocation();
+  const { theme, toggleTheme } = useThemeSettings();
   const activeLabel = navItems.find((item) => item.href === location)?.label ?? "Overview";
-  return <div className={`app-shell ${collapsed ? "shell-collapsed" : ""}`}><div className={`mobile-overlay ${mobileOpen ? "visible" : ""}`} onClick={() => setMobileOpen(false)} /><div className={mobileOpen ? "mobile-sidebar-open" : ""}><Sidebar collapsed={collapsed} onCollapse={() => setCollapsed((value) => !value)} /></div><main className="main-content"><header className="topbar"><button type="button" className="mobile-menu-button" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu size={19} /></button><div className="breadcrumb"><span>AURA / 2026</span><b>/</b><strong>{activeLabel}</strong></div><div className="topbar-right"><span className="topbar-status"><i /> local analysis mode</span><span className="topbar-code">v0.2 / source-backed build</span></div></header><div className="content-wrap">{children}</div><footer className="app-footer"><span>AURA 2026 Forecasting Studio</span><span>Chronological research protocol</span></footer></main></div>;
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  const localDate = now.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  const localTime = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
+  return <div className={`app-shell ${collapsed ? "shell-collapsed" : ""}`}><div className={`mobile-overlay ${mobileOpen ? "visible" : ""}`} onClick={() => setMobileOpen(false)} /><div className={mobileOpen ? "mobile-sidebar-open" : ""}><Sidebar collapsed={collapsed} onCollapse={() => setCollapsed((value) => !value)} /></div><main className="main-content"><header className="topbar"><button type="button" className="mobile-menu-button" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu size={19} /></button><div className="breadcrumb"><span>AURA / 2026</span><b>/</b><strong>{activeLabel}</strong></div><div className="topbar-right"><span className="topbar-clock" title="Browser local time"><Clock3 size={13} /> {localDate} · {localTime}</span><span className="topbar-status"><i /> local analysis mode</span><span className="topbar-code">v0.2 / source-backed build</span><button type="button" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}>{theme === "light" ? <Moon size={15} /> : <Sun size={15} />}<span>{theme === "light" ? "Dark" : "Light"}</span></button></div></header><div className="content-wrap">{children}</div><footer className="app-footer"><span>AURA 2026 Forecasting Studio</span><span>Chronological research protocol</span></footer></main></div>;
 }
 
 function NotFoundPage() {
@@ -305,7 +415,7 @@ function Router() {
 }
 
 function App() {
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}><Router /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><ThemeProvider><ForecastSettingsProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}><Router /></WouterRouter></ForecastSettingsProvider></ThemeProvider><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;

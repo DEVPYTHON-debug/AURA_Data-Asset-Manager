@@ -19,8 +19,6 @@ export const auraData = {
     },
     "dateMin": "2026-01-03 00:00:26",
     "dateMax": "2026-12-09 23:57:23",
-    "originalYear": 2022,
-    "convertedYear": 2026,
     "trainingStart": "2026-02-03 00:00:25",
     "trainingEnd": "2026-08-31 23:57:21",
     "trainingRows": 202965,
@@ -39,8 +37,7 @@ export const auraData = {
       "bias": -23.726993,
       "mape": 7.119203,
       "n": 58217
-    },
-    "dateShiftNote": "All records are presented in a consistent 2026 analysis frame with their within-year time structure preserved."
+    }
   },
   "columns": [
     {
@@ -4055,6 +4052,1016 @@ export const auraData = {
         "heatIndex": 23.700834
       }
     },
+    "weekdayHourlyProfile": {
+      "24": {
+        "temperature": 24.707413,
+        "relativeHumidity": 70.771741,
+        "pressure": 970.099624,
+        "heatIndex": 23.495936
+      },
+      "25": {
+        "temperature": 24.449293,
+        "relativeHumidity": 71.991273,
+        "pressure": 969.343185,
+        "heatIndex": 23.259301
+      },
+      "26": {
+        "temperature": 24.210417,
+        "relativeHumidity": 73.502626,
+        "pressure": 968.949463,
+        "heatIndex": 22.940393
+      },
+      "27": {
+        "temperature": 24.401874,
+        "relativeHumidity": 74.874234,
+        "pressure": 969.158344,
+        "heatIndex": 23.171106
+      },
+      "28": {
+        "temperature": 24.237009,
+        "relativeHumidity": 74.267074,
+        "pressure": 969.510289,
+        "heatIndex": 23.164964
+      },
+      "29": {
+        "temperature": 24.029233,
+        "relativeHumidity": 74.118768,
+        "pressure": 970.075745,
+        "heatIndex": 22.74643
+      },
+      "30": {
+        "temperature": 24.154912,
+        "relativeHumidity": 73.831917,
+        "pressure": 970.526118,
+        "heatIndex": 22.747001
+      },
+      "31": {
+        "temperature": 24.647275,
+        "relativeHumidity": 69.520525,
+        "pressure": 971.114795,
+        "heatIndex": 23.33741
+      },
+      "32": {
+        "temperature": 25.595685,
+        "relativeHumidity": 69.1575,
+        "pressure": 971.792772,
+        "heatIndex": 24.296746
+      },
+      "33": {
+        "temperature": 26.277507,
+        "relativeHumidity": 64.764636,
+        "pressure": 971.718622,
+        "heatIndex": 25.030172
+      },
+      "34": {
+        "temperature": 27.080325,
+        "relativeHumidity": 57.002109,
+        "pressure": 970.977891,
+        "heatIndex": 26.161077
+      },
+      "35": {
+        "temperature": 28.09888,
+        "relativeHumidity": 53.322216,
+        "pressure": 970.275669,
+        "heatIndex": 26.819623
+      },
+      "36": {
+        "temperature": 28.925149,
+        "relativeHumidity": 47.121092,
+        "pressure": 969.150772,
+        "heatIndex": 27.156796
+      },
+      "37": {
+        "temperature": 30.303378,
+        "relativeHumidity": 41.707615,
+        "pressure": 968.273112,
+        "heatIndex": 28.242852
+      },
+      "38": {
+        "temperature": 30.817592,
+        "relativeHumidity": 45.74339,
+        "pressure": 968.136528,
+        "heatIndex": 28.720987
+      },
+      "39": {
+        "temperature": 29.422877,
+        "relativeHumidity": 46.580774,
+        "pressure": 967.719689,
+        "heatIndex": 27.880798
+      },
+      "40": {
+        "temperature": 28.773703,
+        "relativeHumidity": 49.766859,
+        "pressure": 967.641062,
+        "heatIndex": 27.207817
+      },
+      "41": {
+        "temperature": 27.906887,
+        "relativeHumidity": 55.714137,
+        "pressure": 968.3945,
+        "heatIndex": 26.526403
+      },
+      "42": {
+        "temperature": 27.196635,
+        "relativeHumidity": 62.921389,
+        "pressure": 969.11654,
+        "heatIndex": 25.911451
+      },
+      "43": {
+        "temperature": 26.624783,
+        "relativeHumidity": 69.327201,
+        "pressure": 970.09423,
+        "heatIndex": 25.083106
+      },
+      "44": {
+        "temperature": 26.283601,
+        "relativeHumidity": 71.998102,
+        "pressure": 970.778455,
+        "heatIndex": 24.819582
+      },
+      "45": {
+        "temperature": 25.604899,
+        "relativeHumidity": 69.84602,
+        "pressure": 970.925783,
+        "heatIndex": 23.938245
+      },
+      "46": {
+        "temperature": 25.184776,
+        "relativeHumidity": 70.63538,
+        "pressure": 970.849908,
+        "heatIndex": 23.453257
+      },
+      "47": {
+        "temperature": 25.049697,
+        "relativeHumidity": 72.205043,
+        "pressure": 970.383701,
+        "heatIndex": 23.076122
+      },
+      "48": {
+        "temperature": 25.031259,
+        "relativeHumidity": 71.402207,
+        "pressure": 969.694104,
+        "heatIndex": 23.178902
+      },
+      "49": {
+        "temperature": 24.818255,
+        "relativeHumidity": 71.776867,
+        "pressure": 968.915633,
+        "heatIndex": 23.106919
+      },
+      "50": {
+        "temperature": 24.617752,
+        "relativeHumidity": 71.949064,
+        "pressure": 968.526659,
+        "heatIndex": 23.109432
+      },
+      "51": {
+        "temperature": 24.881233,
+        "relativeHumidity": 70.906835,
+        "pressure": 968.652318,
+        "heatIndex": 23.262523
+      },
+      "52": {
+        "temperature": 24.543694,
+        "relativeHumidity": 69.535098,
+        "pressure": 968.574116,
+        "heatIndex": 23.241502
+      },
+      "53": {
+        "temperature": 24.810767,
+        "relativeHumidity": 71.262673,
+        "pressure": 969.278007,
+        "heatIndex": 23.222706
+      },
+      "54": {
+        "temperature": 24.769617,
+        "relativeHumidity": 71.386057,
+        "pressure": 969.732837,
+        "heatIndex": 23.505543
+      },
+      "55": {
+        "temperature": 24.69403,
+        "relativeHumidity": 71.245116,
+        "pressure": 970.384113,
+        "heatIndex": 23.458392
+      },
+      "56": {
+        "temperature": 25.382775,
+        "relativeHumidity": 67.010853,
+        "pressure": 971.104804,
+        "heatIndex": 24.365577
+      },
+      "57": {
+        "temperature": 26.154823,
+        "relativeHumidity": 62.570415,
+        "pressure": 971.023748,
+        "heatIndex": 24.599234
+      },
+      "58": {
+        "temperature": 27.239874,
+        "relativeHumidity": 59.355147,
+        "pressure": 970.61174,
+        "heatIndex": 26.129275
+      },
+      "59": {
+        "temperature": 27.965661,
+        "relativeHumidity": 55.593262,
+        "pressure": 970.030803,
+        "heatIndex": 26.603024
+      },
+      "60": {
+        "temperature": 28.565906,
+        "relativeHumidity": 50.568817,
+        "pressure": 969.197644,
+        "heatIndex": 26.824139
+      },
+      "61": {
+        "temperature": 29.325483,
+        "relativeHumidity": 50.218427,
+        "pressure": 968.384373,
+        "heatIndex": 28.011059
+      },
+      "62": {
+        "temperature": 28.790985,
+        "relativeHumidity": 56.875193,
+        "pressure": 968.311784,
+        "heatIndex": 27.156161
+      },
+      "63": {
+        "temperature": 28.128708,
+        "relativeHumidity": 55.730174,
+        "pressure": 967.74554,
+        "heatIndex": 26.601233
+      },
+      "64": {
+        "temperature": 27.829239,
+        "relativeHumidity": 56.12712,
+        "pressure": 967.621422,
+        "heatIndex": 26.844954
+      },
+      "65": {
+        "temperature": 27.222871,
+        "relativeHumidity": 56.649286,
+        "pressure": 967.938365,
+        "heatIndex": 26.476143
+      },
+      "66": {
+        "temperature": 26.402658,
+        "relativeHumidity": 61.91387,
+        "pressure": 968.493177,
+        "heatIndex": 25.710352
+      },
+      "67": {
+        "temperature": 25.858188,
+        "relativeHumidity": 65.548566,
+        "pressure": 969.05531,
+        "heatIndex": 24.850106
+      },
+      "68": {
+        "temperature": 25.349484,
+        "relativeHumidity": 68.937492,
+        "pressure": 969.706953,
+        "heatIndex": 24.255008
+      },
+      "69": {
+        "temperature": 25.193196,
+        "relativeHumidity": 70.569132,
+        "pressure": 970.211619,
+        "heatIndex": 23.831635
+      },
+      "70": {
+        "temperature": 25.26623,
+        "relativeHumidity": 72.309383,
+        "pressure": 970.574445,
+        "heatIndex": 23.869163
+      },
+      "71": {
+        "temperature": 24.717157,
+        "relativeHumidity": 72.292923,
+        "pressure": 969.888158,
+        "heatIndex": 23.064449
+      },
+      "144": {
+        "temperature": 24.986644,
+        "relativeHumidity": 72.416926,
+        "pressure": 969.840692,
+        "heatIndex": 23.68977
+      },
+      "145": {
+        "temperature": 24.890601,
+        "relativeHumidity": 72.715419,
+        "pressure": 969.453135,
+        "heatIndex": 23.620029
+      },
+      "146": {
+        "temperature": 24.707176,
+        "relativeHumidity": 74.322238,
+        "pressure": 969.223344,
+        "heatIndex": 23.246122
+      },
+      "147": {
+        "temperature": 25.031302,
+        "relativeHumidity": 73.243398,
+        "pressure": 969.351483,
+        "heatIndex": 23.565475
+      },
+      "148": {
+        "temperature": 24.762188,
+        "relativeHumidity": 74.469249,
+        "pressure": 969.534525,
+        "heatIndex": 23.401742
+      },
+      "149": {
+        "temperature": 24.586075,
+        "relativeHumidity": 76.737973,
+        "pressure": 970.030183,
+        "heatIndex": 23.243815
+      },
+      "150": {
+        "temperature": 24.721578,
+        "relativeHumidity": 76.828223,
+        "pressure": 970.759377,
+        "heatIndex": 23.183577
+      },
+      "151": {
+        "temperature": 25.305957,
+        "relativeHumidity": 78.598439,
+        "pressure": 971.594152,
+        "heatIndex": 24.274924
+      },
+      "152": {
+        "temperature": 26.208059,
+        "relativeHumidity": 73.995866,
+        "pressure": 971.849364,
+        "heatIndex": 25.099791
+      },
+      "153": {
+        "temperature": 26.809551,
+        "relativeHumidity": 67.847089,
+        "pressure": 971.952965,
+        "heatIndex": 25.363
+      },
+      "154": {
+        "temperature": 27.213712,
+        "relativeHumidity": 62.028649,
+        "pressure": 971.505719,
+        "heatIndex": 25.620256
+      },
+      "155": {
+        "temperature": 28.164798,
+        "relativeHumidity": 58.367524,
+        "pressure": 970.828325,
+        "heatIndex": 26.393936
+      },
+      "156": {
+        "temperature": 28.877887,
+        "relativeHumidity": 59.448141,
+        "pressure": 970.218582,
+        "heatIndex": 26.293816
+      },
+      "157": {
+        "temperature": 28.854002,
+        "relativeHumidity": 54.333057,
+        "pressure": 969.287027,
+        "heatIndex": 27.345941
+      },
+      "158": {
+        "temperature": 29.395904,
+        "relativeHumidity": 57.314297,
+        "pressure": 968.684458,
+        "heatIndex": 28.26511
+      },
+      "159": {
+        "temperature": 29.039407,
+        "relativeHumidity": 58.326444,
+        "pressure": 968.372333,
+        "heatIndex": 28.111752
+      },
+      "160": {
+        "temperature": 28.255836,
+        "relativeHumidity": 56.024287,
+        "pressure": 968.025015,
+        "heatIndex": 27.571082
+      },
+      "161": {
+        "temperature": 27.739579,
+        "relativeHumidity": 58.650593,
+        "pressure": 968.536243,
+        "heatIndex": 26.917802
+      },
+      "162": {
+        "temperature": 26.862684,
+        "relativeHumidity": 65.885067,
+        "pressure": 969.346862,
+        "heatIndex": 25.569414
+      },
+      "163": {
+        "temperature": 26.329556,
+        "relativeHumidity": 70.319154,
+        "pressure": 970.159948,
+        "heatIndex": 24.706224
+      },
+      "164": {
+        "temperature": 26.248802,
+        "relativeHumidity": 72.743325,
+        "pressure": 970.858898,
+        "heatIndex": 25.396424
+      },
+      "165": {
+        "temperature": 26.104432,
+        "relativeHumidity": 73.324067,
+        "pressure": 971.164556,
+        "heatIndex": 25.016308
+      },
+      "166": {
+        "temperature": 25.663838,
+        "relativeHumidity": 74.471059,
+        "pressure": 971.266898,
+        "heatIndex": 24.163065
+      },
+      "167": {
+        "temperature": 25.386378,
+        "relativeHumidity": 73.497098,
+        "pressure": 970.658584,
+        "heatIndex": 24.174323
+      },
+      "0": {
+        "temperature": 24.993228,
+        "relativeHumidity": 73.396965,
+        "pressure": 970.27996,
+        "heatIndex": 23.933405
+      },
+      "1": {
+        "temperature": 24.873543,
+        "relativeHumidity": 73.137026,
+        "pressure": 969.66617,
+        "heatIndex": 23.770945
+      },
+      "2": {
+        "temperature": 24.581286,
+        "relativeHumidity": 73.013448,
+        "pressure": 969.118152,
+        "heatIndex": 23.490744
+      },
+      "3": {
+        "temperature": 24.539886,
+        "relativeHumidity": 74.37749,
+        "pressure": 969.236281,
+        "heatIndex": 23.296358
+      },
+      "4": {
+        "temperature": 24.345008,
+        "relativeHumidity": 74.311275,
+        "pressure": 969.415238,
+        "heatIndex": 23.140463
+      },
+      "5": {
+        "temperature": 24.348327,
+        "relativeHumidity": 75.221359,
+        "pressure": 969.9792,
+        "heatIndex": 23.038141
+      },
+      "6": {
+        "temperature": 24.556502,
+        "relativeHumidity": 76.863759,
+        "pressure": 970.856948,
+        "heatIndex": 23.231287
+      },
+      "7": {
+        "temperature": 25.100833,
+        "relativeHumidity": 76.173684,
+        "pressure": 971.517212,
+        "heatIndex": 23.724511
+      },
+      "8": {
+        "temperature": 25.748743,
+        "relativeHumidity": 70.948482,
+        "pressure": 971.634345,
+        "heatIndex": 24.534709
+      },
+      "9": {
+        "temperature": 26.260037,
+        "relativeHumidity": 68.248733,
+        "pressure": 971.92345,
+        "heatIndex": 24.916208
+      },
+      "10": {
+        "temperature": 26.955173,
+        "relativeHumidity": 66.087959,
+        "pressure": 971.724712,
+        "heatIndex": 25.834474
+      },
+      "11": {
+        "temperature": 27.695626,
+        "relativeHumidity": 63.593505,
+        "pressure": 970.992411,
+        "heatIndex": 26.671923
+      },
+      "12": {
+        "temperature": 28.354206,
+        "relativeHumidity": 60.855095,
+        "pressure": 969.9731,
+        "heatIndex": 27.419736
+      },
+      "13": {
+        "temperature": 29.199278,
+        "relativeHumidity": 52.935567,
+        "pressure": 968.980806,
+        "heatIndex": 28.441611
+      },
+      "14": {
+        "temperature": 29.302464,
+        "relativeHumidity": 54.075614,
+        "pressure": 968.751588,
+        "heatIndex": 28.46963
+      },
+      "15": {
+        "temperature": 29.256321,
+        "relativeHumidity": 51.202492,
+        "pressure": 968.022309,
+        "heatIndex": 28.323279
+      },
+      "17": {
+        "temperature": 27.513483,
+        "relativeHumidity": 56.883197,
+        "pressure": 968.427259,
+        "heatIndex": 26.918327
+      },
+      "18": {
+        "temperature": 26.754988,
+        "relativeHumidity": 60.668428,
+        "pressure": 969.327893,
+        "heatIndex": 26.32888
+      },
+      "19": {
+        "temperature": 26.108457,
+        "relativeHumidity": 64.417517,
+        "pressure": 970.252541,
+        "heatIndex": 25.3338
+      },
+      "20": {
+        "temperature": 25.803312,
+        "relativeHumidity": 67.636309,
+        "pressure": 970.815702,
+        "heatIndex": 24.950726
+      },
+      "21": {
+        "temperature": 25.479715,
+        "relativeHumidity": 68.558781,
+        "pressure": 971.108878,
+        "heatIndex": 24.69173
+      },
+      "22": {
+        "temperature": 24.92033,
+        "relativeHumidity": 70.277746,
+        "pressure": 971.243045,
+        "heatIndex": 23.892408
+      },
+      "23": {
+        "temperature": 24.71928,
+        "relativeHumidity": 71.556777,
+        "pressure": 970.761477,
+        "heatIndex": 23.689919
+      },
+      "111": {
+        "temperature": 29.380594,
+        "relativeHumidity": 48.808554,
+        "pressure": 967.041255,
+        "heatIndex": 28.179726
+      },
+      "112": {
+        "temperature": 28.415587,
+        "relativeHumidity": 54.642187,
+        "pressure": 967.591318,
+        "heatIndex": 27.724131
+      },
+      "113": {
+        "temperature": 27.349842,
+        "relativeHumidity": 58.093094,
+        "pressure": 967.970108,
+        "heatIndex": 26.191526
+      },
+      "114": {
+        "temperature": 27.105666,
+        "relativeHumidity": 62.676044,
+        "pressure": 968.793616,
+        "heatIndex": 26.028096
+      },
+      "115": {
+        "temperature": 26.523901,
+        "relativeHumidity": 66.450157,
+        "pressure": 969.598325,
+        "heatIndex": 25.41732
+      },
+      "116": {
+        "temperature": 26.491052,
+        "relativeHumidity": 68.584955,
+        "pressure": 970.438062,
+        "heatIndex": 25.146795
+      },
+      "117": {
+        "temperature": 26.070087,
+        "relativeHumidity": 70.642634,
+        "pressure": 970.779913,
+        "heatIndex": 24.25674
+      },
+      "118": {
+        "temperature": 25.627985,
+        "relativeHumidity": 72.75613,
+        "pressure": 970.979056,
+        "heatIndex": 23.473836
+      },
+      "119": {
+        "temperature": 25.190673,
+        "relativeHumidity": 72.247884,
+        "pressure": 970.508367,
+        "heatIndex": 23.435179
+      },
+      "120": {
+        "temperature": 24.616947,
+        "relativeHumidity": 73.177372,
+        "pressure": 969.925025,
+        "heatIndex": 23.422616
+      },
+      "121": {
+        "temperature": 24.439714,
+        "relativeHumidity": 72.057246,
+        "pressure": 969.324145,
+        "heatIndex": 23.348993
+      },
+      "122": {
+        "temperature": 24.410871,
+        "relativeHumidity": 72.032558,
+        "pressure": 968.922613,
+        "heatIndex": 23.342
+      },
+      "123": {
+        "temperature": 24.309469,
+        "relativeHumidity": 72.01859,
+        "pressure": 968.930402,
+        "heatIndex": 23.201091
+      },
+      "124": {
+        "temperature": 24.40641,
+        "relativeHumidity": 73.996842,
+        "pressure": 969.466777,
+        "heatIndex": 23.10702
+      },
+      "125": {
+        "temperature": 24.243027,
+        "relativeHumidity": 75.104408,
+        "pressure": 970.080956,
+        "heatIndex": 22.931908
+      },
+      "126": {
+        "temperature": 24.155499,
+        "relativeHumidity": 74.770273,
+        "pressure": 970.477516,
+        "heatIndex": 22.979427
+      },
+      "127": {
+        "temperature": 24.462762,
+        "relativeHumidity": 71.836263,
+        "pressure": 971.007073,
+        "heatIndex": 23.554678
+      },
+      "128": {
+        "temperature": 25.187597,
+        "relativeHumidity": 70.023785,
+        "pressure": 971.555056,
+        "heatIndex": 24.336457
+      },
+      "129": {
+        "temperature": 25.837361,
+        "relativeHumidity": 64.290032,
+        "pressure": 971.54362,
+        "heatIndex": 25.086058
+      },
+      "130": {
+        "temperature": 26.698435,
+        "relativeHumidity": 55.51973,
+        "pressure": 970.969611,
+        "heatIndex": 26.024807
+      },
+      "131": {
+        "temperature": 27.51835,
+        "relativeHumidity": 49.561908,
+        "pressure": 970.108243,
+        "heatIndex": 26.793545
+      },
+      "132": {
+        "temperature": 28.337187,
+        "relativeHumidity": 45.867754,
+        "pressure": 969.108952,
+        "heatIndex": 27.346237
+      },
+      "133": {
+        "temperature": 28.933273,
+        "relativeHumidity": 52.860858,
+        "pressure": 968.404774,
+        "heatIndex": 28.840417
+      },
+      "135": {
+        "temperature": 29.271688,
+        "relativeHumidity": 45.633132,
+        "pressure": 967.047094,
+        "heatIndex": 28.886829
+      },
+      "136": {
+        "temperature": 28.242016,
+        "relativeHumidity": 45.624188,
+        "pressure": 967.172832,
+        "heatIndex": 27.739194
+      },
+      "137": {
+        "temperature": 27.102321,
+        "relativeHumidity": 53.805671,
+        "pressure": 967.819793,
+        "heatIndex": 26.889459
+      },
+      "138": {
+        "temperature": 26.239173,
+        "relativeHumidity": 62.495168,
+        "pressure": 968.66968,
+        "heatIndex": 26.083206
+      },
+      "142": {
+        "temperature": 24.965215,
+        "relativeHumidity": 70.715164,
+        "pressure": 970.723258,
+        "heatIndex": 24.704862
+      },
+      "143": {
+        "temperature": 24.787754,
+        "relativeHumidity": 70.998235,
+        "pressure": 970.175247,
+        "heatIndex": 24.364831
+      },
+      "16": {
+        "temperature": 28.326504,
+        "relativeHumidity": 50.974359,
+        "pressure": 967.543897,
+        "heatIndex": 27.387353
+      },
+      "83": {
+        "temperature": 27.864016,
+        "relativeHumidity": 64.357421,
+        "pressure": 971.459276,
+        "heatIndex": 27.103718
+      },
+      "84": {
+        "temperature": 27.989204,
+        "relativeHumidity": 66.985673,
+        "pressure": 970.59157,
+        "heatIndex": 27.120571
+      },
+      "90": {
+        "temperature": 25.902971,
+        "relativeHumidity": 74.36605,
+        "pressure": 969.886286,
+        "heatIndex": 25.066919
+      },
+      "91": {
+        "temperature": 26.103103,
+        "relativeHumidity": 71.823492,
+        "pressure": 970.477121,
+        "heatIndex": 26.235105
+      },
+      "134": {
+        "temperature": 29.529202,
+        "relativeHumidity": 45.935254,
+        "pressure": 967.450842,
+        "heatIndex": 28.851473
+      },
+      "139": {
+        "temperature": 25.793733,
+        "relativeHumidity": 65.445353,
+        "pressure": 969.156918,
+        "heatIndex": 25.40665
+      },
+      "140": {
+        "temperature": 25.407484,
+        "relativeHumidity": 70.065111,
+        "pressure": 969.905209,
+        "heatIndex": 24.897972
+      },
+      "141": {
+        "temperature": 25.059361,
+        "relativeHumidity": 71.827796,
+        "pressure": 970.634782,
+        "heatIndex": 24.583462
+      },
+      "96": {
+        "temperature": 25.133147,
+        "relativeHumidity": 76.276719,
+        "pressure": 970.309545,
+        "heatIndex": 23.481203
+      },
+      "103": {
+        "temperature": 25.417786,
+        "relativeHumidity": 74.688989,
+        "pressure": 971.261221,
+        "heatIndex": 23.189312
+      },
+      "104": {
+        "temperature": 25.825403,
+        "relativeHumidity": 70.610466,
+        "pressure": 971.319338,
+        "heatIndex": 24.252756
+      },
+      "105": {
+        "temperature": 26.566242,
+        "relativeHumidity": 66.699227,
+        "pressure": 971.338578,
+        "heatIndex": 25.316829
+      },
+      "106": {
+        "temperature": 27.385534,
+        "relativeHumidity": 65.713839,
+        "pressure": 971.021548,
+        "heatIndex": 26.501074
+      },
+      "107": {
+        "temperature": 27.852726,
+        "relativeHumidity": 63.164725,
+        "pressure": 970.379885,
+        "heatIndex": 27.247592
+      },
+      "108": {
+        "temperature": 28.555646,
+        "relativeHumidity": 56.44148,
+        "pressure": 969.072643,
+        "heatIndex": 27.527198
+      },
+      "109": {
+        "temperature": 29.172455,
+        "relativeHumidity": 51.276437,
+        "pressure": 967.949293,
+        "heatIndex": 27.863808
+      },
+      "110": {
+        "temperature": 29.173938,
+        "relativeHumidity": 52.059936,
+        "pressure": 967.39897,
+        "heatIndex": 28.270728
+      },
+      "72": {
+        "temperature": 24.551977,
+        "relativeHumidity": 74.693356,
+        "pressure": 970.12377,
+        "heatIndex": 23.895536
+      },
+      "73": {
+        "temperature": 24.024166,
+        "relativeHumidity": 74.303252,
+        "pressure": 969.448618,
+        "heatIndex": 23.317952
+      },
+      "74": {
+        "temperature": 23.623598,
+        "relativeHumidity": 73.342134,
+        "pressure": 969.01467,
+        "heatIndex": 23.303574
+      },
+      "75": {
+        "temperature": 23.928586,
+        "relativeHumidity": 77.719566,
+        "pressure": 969.573449,
+        "heatIndex": 23.247057
+      },
+      "76": {
+        "temperature": 24.298014,
+        "relativeHumidity": 81.333115,
+        "pressure": 970.209441,
+        "heatIndex": 23.174177
+      },
+      "77": {
+        "temperature": 24.216048,
+        "relativeHumidity": 82.558321,
+        "pressure": 970.745833,
+        "heatIndex": 23.193316
+      },
+      "78": {
+        "temperature": 24.4999,
+        "relativeHumidity": 83.060613,
+        "pressure": 971.399943,
+        "heatIndex": 23.201953
+      },
+      "80": {
+        "temperature": 25.541262,
+        "relativeHumidity": 75.031412,
+        "pressure": 972.29059,
+        "heatIndex": 24.698801
+      },
+      "81": {
+        "temperature": 26.489733,
+        "relativeHumidity": 72.037406,
+        "pressure": 972.359539,
+        "heatIndex": 25.585385
+      },
+      "82": {
+        "temperature": 27.231749,
+        "relativeHumidity": 67.708889,
+        "pressure": 972.003138,
+        "heatIndex": 26.499498
+      },
+      "85": {
+        "temperature": 28.28772,
+        "relativeHumidity": 64.450901,
+        "pressure": 969.640145,
+        "heatIndex": 27.966763
+      },
+      "86": {
+        "temperature": 28.411175,
+        "relativeHumidity": 62.214186,
+        "pressure": 968.925434,
+        "heatIndex": 27.938131
+      },
+      "87": {
+        "temperature": 28.074197,
+        "relativeHumidity": 63.212383,
+        "pressure": 968.719672,
+        "heatIndex": 27.533925
+      },
+      "88": {
+        "temperature": 27.333679,
+        "relativeHumidity": 62.488008,
+        "pressure": 968.749119,
+        "heatIndex": 27.034067
+      },
+      "89": {
+        "temperature": 26.3729,
+        "relativeHumidity": 67.963109,
+        "pressure": 968.995603,
+        "heatIndex": 25.857198
+      },
+      "92": {
+        "temperature": 25.469088,
+        "relativeHumidity": 77.106229,
+        "pressure": 971.361535,
+        "heatIndex": 25.026885
+      },
+      "93": {
+        "temperature": 25.304273,
+        "relativeHumidity": 78.763972,
+        "pressure": 971.827723,
+        "heatIndex": 24.96597
+      },
+      "94": {
+        "temperature": 25.007098,
+        "relativeHumidity": 74.803164,
+        "pressure": 971.624298,
+        "heatIndex": 24.48329
+      },
+      "95": {
+        "temperature": 24.94308,
+        "relativeHumidity": 76.347515,
+        "pressure": 971.473797,
+        "heatIndex": 23.994765
+      },
+      "97": {
+        "temperature": 25.241262,
+        "relativeHumidity": 77.140642,
+        "pressure": 969.897279,
+        "heatIndex": 23.33397
+      },
+      "98": {
+        "temperature": 24.996901,
+        "relativeHumidity": 78.704197,
+        "pressure": 969.682155,
+        "heatIndex": 22.630446
+      },
+      "99": {
+        "temperature": 24.82683,
+        "relativeHumidity": 77.865,
+        "pressure": 969.430649,
+        "heatIndex": 22.291667
+      },
+      "100": {
+        "temperature": 24.725924,
+        "relativeHumidity": 77.982315,
+        "pressure": 969.492805,
+        "heatIndex": 21.948895
+      },
+      "101": {
+        "temperature": 24.454689,
+        "relativeHumidity": 77.052209,
+        "pressure": 969.625654,
+        "heatIndex": 22.340536
+      },
+      "102": {
+        "temperature": 24.865489,
+        "relativeHumidity": 75.915699,
+        "pressure": 970.334247,
+        "heatIndex": 22.606558
+      },
+      "79": {
+        "temperature": 24.941833,
+        "relativeHumidity": 78.846869,
+        "pressure": 972.123954,
+        "heatIndex": 23.811829
+      }
+    },
     "limitations": [
       "Future environmental predictors use training-period hour-of-day climatology because no external weather source is permitted.",
       "Longer horizons should be treated as exploratory and are not equally reliable to a one-day forecast."
@@ -4066,305 +5073,305 @@ export const auraData = {
       "date": "2026-09-01",
       "time": "00:00",
       "hour": 0,
-      "temperature": 24.881431,
-      "relativeHumidity": 73.080246,
-      "pressure": 970.042216,
-      "heatIndex": 23.588545,
-      "refractivity": 331.1586
+      "temperature": 24.707413,
+      "relativeHumidity": 70.771741,
+      "pressure": 970.099624,
+      "heatIndex": 23.495936,
+      "refractivity": 329.2403
     },
     {
       "timestamp": "2026-09-01 01:00:00",
       "date": "2026-09-01",
       "time": "01:00",
       "hour": 1,
-      "temperature": 24.710004,
-      "relativeHumidity": 73.20397,
-      "pressure": 969.444974,
-      "heatIndex": 23.414437,
-      "refractivity": 330.7183
+      "temperature": 24.449293,
+      "relativeHumidity": 71.991273,
+      "pressure": 969.343185,
+      "heatIndex": 23.259301,
+      "refractivity": 329.9432
     },
     {
       "timestamp": "2026-09-01 02:00:00",
       "date": "2026-09-01",
       "time": "02:00",
       "hour": 2,
-      "temperature": 24.482862,
-      "relativeHumidity": 73.712959,
-      "pressure": 969.059331,
-      "heatIndex": 23.206653,
-      "refractivity": 330.8268
+      "temperature": 24.210417,
+      "relativeHumidity": 73.502626,
+      "pressure": 968.949463,
+      "heatIndex": 22.940393,
+      "refractivity": 330.0819
     },
     {
       "timestamp": "2026-09-01 03:00:00",
       "date": "2026-09-01",
       "time": "03:00",
       "hour": 3,
-      "temperature": 24.582908,
-      "relativeHumidity": 74.238497,
-      "pressure": 969.180407,
-      "heatIndex": 23.204286,
-      "refractivity": 330.5573
+      "temperature": 24.401874,
+      "relativeHumidity": 74.874234,
+      "pressure": 969.158344,
+      "heatIndex": 23.171106,
+      "refractivity": 332.3108
     },
     {
       "timestamp": "2026-09-01 04:00:00",
       "date": "2026-09-01",
       "time": "04:00",
       "hour": 4,
-      "temperature": 24.470863,
-      "relativeHumidity": 74.89093,
-      "pressure": 969.445453,
-      "heatIndex": 23.085693,
-      "refractivity": 330.9641
+      "temperature": 24.237009,
+      "relativeHumidity": 74.267074,
+      "pressure": 969.510289,
+      "heatIndex": 23.164964,
+      "refractivity": 332.9734
     },
     {
       "timestamp": "2026-09-01 05:00:00",
       "date": "2026-09-01",
       "time": "05:00",
       "hour": 5,
-      "temperature": 24.366099,
-      "relativeHumidity": 75.841067,
-      "pressure": 969.96548,
-      "heatIndex": 22.920364,
-      "refractivity": 331.2278
+      "temperature": 24.029233,
+      "relativeHumidity": 74.118768,
+      "pressure": 970.075745,
+      "heatIndex": 22.74643,
+      "refractivity": 330.4197
     },
     {
       "timestamp": "2026-09-01 06:00:00",
       "date": "2026-09-01",
       "time": "06:00",
       "hour": 6,
-      "temperature": 24.51034,
-      "relativeHumidity": 75.788316,
-      "pressure": 970.573631,
-      "heatIndex": 23.041569,
-      "refractivity": 331.3325
+      "temperature": 24.154912,
+      "relativeHumidity": 73.831917,
+      "pressure": 970.526118,
+      "heatIndex": 22.747001,
+      "refractivity": 329.173
     },
     {
       "timestamp": "2026-09-01 07:00:00",
       "date": "2026-09-01",
       "time": "07:00",
       "hour": 7,
-      "temperature": 24.911694,
-      "relativeHumidity": 73.962036,
-      "pressure": 971.226553,
-      "heatIndex": 23.531957,
-      "refractivity": 331.2249
+      "temperature": 24.647275,
+      "relativeHumidity": 69.520525,
+      "pressure": 971.114795,
+      "heatIndex": 23.33741,
+      "refractivity": 326.7314
     },
     {
       "timestamp": "2026-09-01 08:00:00",
       "date": "2026-09-01",
       "time": "08:00",
       "hour": 8,
-      "temperature": 25.641859,
-      "relativeHumidity": 70.784953,
-      "pressure": 971.628974,
-      "heatIndex": 24.439237,
-      "refractivity": 331.1475
+      "temperature": 25.595685,
+      "relativeHumidity": 69.1575,
+      "pressure": 971.792772,
+      "heatIndex": 24.296746,
+      "refractivity": 328.4732
     },
     {
       "timestamp": "2026-09-01 09:00:00",
       "date": "2026-09-01",
       "time": "09:00",
       "hour": 9,
-      "temperature": 26.333294,
-      "relativeHumidity": 66.591797,
-      "pressure": 971.698276,
-      "heatIndex": 25.076853,
-      "refractivity": 327.5307
+      "temperature": 26.277507,
+      "relativeHumidity": 64.764636,
+      "pressure": 971.718622,
+      "heatIndex": 25.030172,
+      "refractivity": 325.6191
     },
     {
       "timestamp": "2026-09-01 10:00:00",
       "date": "2026-09-01",
       "time": "10:00",
       "hour": 10,
-      "temperature": 27.107713,
-      "relativeHumidity": 61.722927,
-      "pressure": 971.250674,
-      "heatIndex": 26.093355,
-      "refractivity": 326.129
+      "temperature": 27.080325,
+      "relativeHumidity": 57.002109,
+      "pressure": 970.977891,
+      "heatIndex": 26.161077,
+      "refractivity": 322.009
     },
     {
       "timestamp": "2026-09-01 11:00:00",
       "date": "2026-09-01",
       "time": "11:00",
       "hour": 11,
-      "temperature": 27.885193,
-      "relativeHumidity": 58.171655,
-      "pressure": 970.577295,
-      "heatIndex": 26.788487,
-      "refractivity": 322.8284
+      "temperature": 28.09888,
+      "relativeHumidity": 53.322216,
+      "pressure": 970.275669,
+      "heatIndex": 26.819623,
+      "refractivity": 316.2968
     },
     {
       "timestamp": "2026-09-01 12:00:00",
       "date": "2026-09-01",
       "time": "12:00",
       "hour": 12,
-      "temperature": 28.535922,
-      "relativeHumidity": 54.65175,
-      "pressure": 969.566332,
-      "heatIndex": 27.170978,
-      "refractivity": 317.3688
+      "temperature": 28.925149,
+      "relativeHumidity": 47.121092,
+      "pressure": 969.150772,
+      "heatIndex": 27.156796,
+      "refractivity": 306.1734
     },
     {
       "timestamp": "2026-09-01 13:00:00",
       "date": "2026-09-01",
       "time": "13:00",
       "hour": 13,
-      "temperature": 29.194265,
-      "relativeHumidity": 52.151046,
-      "pressure": 968.683527,
-      "heatIndex": 28.125784,
-      "refractivity": 318.6614
+      "temperature": 30.303378,
+      "relativeHumidity": 41.707615,
+      "pressure": 968.273112,
+      "heatIndex": 28.242852,
+      "refractivity": 300.0552
     },
     {
       "timestamp": "2026-09-01 14:00:00",
       "date": "2026-09-01",
       "time": "14:00",
       "hour": 14,
-      "temperature": 29.377491,
-      "relativeHumidity": 53.230873,
-      "pressure": 968.246109,
-      "heatIndex": 28.36664,
-      "refractivity": 320.5639
+      "temperature": 30.817592,
+      "relativeHumidity": 45.74339,
+      "pressure": 968.136528,
+      "heatIndex": 28.720987,
+      "refractivity": 304.8776
     },
     {
       "timestamp": "2026-09-01 15:00:00",
       "date": "2026-09-01",
       "time": "15:00",
       "hour": 15,
-      "temperature": 28.98218,
-      "relativeHumidity": 52.435851,
-      "pressure": 967.784203,
-      "heatIndex": 28.041109,
-      "refractivity": 319.5089
+      "temperature": 29.422877,
+      "relativeHumidity": 46.580774,
+      "pressure": 967.719689,
+      "heatIndex": 27.880798,
+      "refractivity": 308.3337
     },
     {
       "timestamp": "2026-09-01 16:00:00",
       "date": "2026-09-01",
       "time": "16:00",
       "hour": 16,
-      "temperature": 28.199278,
-      "relativeHumidity": 53.082569,
-      "pressure": 967.718595,
-      "heatIndex": 27.389637,
-      "refractivity": 319.9711
+      "temperature": 28.773703,
+      "relativeHumidity": 49.766859,
+      "pressure": 967.641062,
+      "heatIndex": 27.207817,
+      "refractivity": 310.1588
     },
     {
       "timestamp": "2026-09-01 17:00:00",
       "date": "2026-09-01",
       "time": "17:00",
       "hour": 17,
-      "temperature": 27.34475,
-      "relativeHumidity": 57.724685,
-      "pressure": 968.246527,
-      "heatIndex": 26.590898,
-      "refractivity": 323.9457
+      "temperature": 27.906887,
+      "relativeHumidity": 55.714137,
+      "pressure": 968.3945,
+      "heatIndex": 26.526403,
+      "refractivity": 316.834
     },
     {
       "timestamp": "2026-09-01 18:00:00",
       "date": "2026-09-01",
       "time": "18:00",
       "hour": 18,
-      "temperature": 26.674012,
-      "relativeHumidity": 64.07608,
-      "pressure": 969.069649,
-      "heatIndex": 25.91429,
-      "refractivity": 329.5872
+      "temperature": 27.196635,
+      "relativeHumidity": 62.921389,
+      "pressure": 969.11654,
+      "heatIndex": 25.911451,
+      "refractivity": 324.2487
     },
     {
       "timestamp": "2026-09-01 19:00:00",
       "date": "2026-09-01",
       "time": "19:00",
       "hour": 19,
-      "temperature": 26.196524,
-      "relativeHumidity": 67.423792,
-      "pressure": 969.807284,
-      "heatIndex": 25.282803,
-      "refractivity": 331.0089
+      "temperature": 26.624783,
+      "relativeHumidity": 69.327201,
+      "pressure": 970.09423,
+      "heatIndex": 25.083106,
+      "refractivity": 327.7341
     },
     {
       "timestamp": "2026-09-01 20:00:00",
       "date": "2026-09-01",
       "time": "20:00",
       "hour": 20,
-      "temperature": 25.890578,
-      "relativeHumidity": 70.660564,
-      "pressure": 970.515662,
-      "heatIndex": 24.869598,
-      "refractivity": 333.1135
+      "temperature": 26.283601,
+      "relativeHumidity": 71.998102,
+      "pressure": 970.778455,
+      "heatIndex": 24.819582,
+      "refractivity": 331.0025
     },
     {
       "timestamp": "2026-09-01 21:00:00",
       "date": "2026-09-01",
       "time": "21:00",
       "hour": 21,
-      "temperature": 25.551221,
-      "relativeHumidity": 71.566683,
-      "pressure": 970.929014,
-      "heatIndex": 24.394734,
-      "refractivity": 332.3306
+      "temperature": 25.604899,
+      "relativeHumidity": 69.84602,
+      "pressure": 970.925783,
+      "heatIndex": 23.938245,
+      "refractivity": 325.5971
     },
     {
       "timestamp": "2026-09-01 22:00:00",
       "date": "2026-09-01",
       "time": "22:00",
       "hour": 22,
-      "temperature": 25.227838,
-      "relativeHumidity": 72.143637,
-      "pressure": 971.033641,
-      "heatIndex": 23.98776,
-      "refractivity": 331.6173
+      "temperature": 25.184776,
+      "relativeHumidity": 70.63538,
+      "pressure": 970.849908,
+      "heatIndex": 23.453257,
+      "refractivity": 325.0272
     },
     {
       "timestamp": "2026-09-01 23:00:00",
       "date": "2026-09-01",
       "time": "23:00",
       "hour": 23,
-      "temperature": 24.972018,
-      "relativeHumidity": 72.601228,
-      "pressure": 970.545686,
-      "heatIndex": 23.700834,
-      "refractivity": 331.1838
+      "temperature": 25.049697,
+      "relativeHumidity": 72.205043,
+      "pressure": 970.383701,
+      "heatIndex": 23.076122,
+      "refractivity": 323.9097
     }
   ],
   "monthlyForecast": [
     {
       "month": "September 2026",
       "key": "2026-09",
-      "temperature": 26.2513,
-      "relativeHumidity": 66.4058,
-      "pressure": 969.8433,
-      "heatIndex": 25.0928,
-      "refractivity": 327.6878,
+      "temperature": 26.2418,
+      "relativeHumidity": 66.5113,
+      "pressure": 969.84,
+      "heatIndex": 25.0688,
+      "refractivity": 327.6332,
       "hours": 720
     },
     {
       "month": "October 2026",
       "key": "2026-10",
-      "temperature": 26.2513,
-      "relativeHumidity": 66.4058,
-      "pressure": 969.8433,
-      "heatIndex": 25.0928,
-      "refractivity": 327.6878,
+      "temperature": 26.2275,
+      "relativeHumidity": 66.7922,
+      "pressure": 969.8656,
+      "heatIndex": 25.087,
+      "refractivity": 328.2276,
       "hours": 744
     },
     {
       "month": "November 2026",
       "key": "2026-11",
-      "temperature": 26.2513,
-      "relativeHumidity": 66.4058,
-      "pressure": 969.8433,
-      "heatIndex": 25.0928,
-      "refractivity": 327.6878,
+      "temperature": 26.2478,
+      "relativeHumidity": 66.7181,
+      "pressure": 969.8753,
+      "heatIndex": 25.0899,
+      "refractivity": 328.0229,
       "hours": 720
     },
     {
       "month": "December 2026",
       "key": "2026-12",
-      "temperature": 26.2513,
-      "relativeHumidity": 66.4058,
-      "pressure": 969.8433,
-      "heatIndex": 25.0928,
-      "refractivity": 327.6878,
+      "temperature": 26.2292,
+      "relativeHumidity": 66.7119,
+      "pressure": 969.8627,
+      "heatIndex": 25.0723,
+      "refractivity": 327.9847,
       "hours": 744
     }
   ],

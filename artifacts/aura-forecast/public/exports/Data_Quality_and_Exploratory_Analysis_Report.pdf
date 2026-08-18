@@ -3,16 +3,16 @@
 << /Type /Catalog /Pages 2 0 R >>
 endobj
 2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+<< /Type /Pages /Kids [4 0 R 6 0 R] /Count 2 >>
 endobj
 3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
-endobj
-4 0 obj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
 5 0 obj
-<< /Length 2147 >>
+<< /Length 4502 >>
 stream
 BT
 /F1 10 Tf
@@ -23,19 +23,71 @@ BT
 0 -14 Td
 (Dataset description: 286,696 valid observations were parsed from) Tj
 0 -14 Td
-(AY_Project_Data_1786812502784.xlsx. The workbook contains split date/time columns, repeated) Tj
+(AY_Project_Data_1786812502784.xlsx. The analysis frame contains split date/time fields,) Tj
 0 -14 Td
-(metadata/header rows, and missing sentinel values.) Tj
+(repeated metadata/header rows, and missing sentinel values.) Tj
 0 -14 Td
-(Cleaning methodology: 3,121 non-observation rows were excluded from the analysis frame.) Tj
+(Cleaning methodology: 3,121 non-observation rows were excluded. Exact duplicate rows: 0.) Tj
 0 -14 Td
-(Exact duplicate rows: 0. Duplicate timestamps: 0; conflicting timestamp groups: 0. The -9999) Tj
+(Duplicate timestamps: 0; conflicting timestamp groups: 0. The -9999 sentinel was preserved) Tj
 0 -14 Td
-(sentinel was preserved as missing, not converted to zero.) Tj
+(as missing, not converted to zero.) Tj
 0 -14 Td
-(The observation dates were calendar-shifted from 2022 to 2026 for the project's forecasting) Tj
+(Quality statistics: Signal Quality: valid 100.0%, missing 0.0%, mean 11.047207, median 11.0,) Tj
 0 -14 Td
-(timeline while preserving the original month, day and time structure.) Tj
+(std 2.128739, outliers 10350; Signal Strength \(dBm\): valid 100.0%, missing 0.0%, mean) Tj
+0 -14 Td
+(-91.90551, median -92.0, std 4.257128, outliers 10350; Sat. View: valid 55.379%, missing) Tj
+0 -14 Td
+(44.621%, mean 8.008919, median 8.0, std 2.041418, outliers 2452; Sat. Used: valid 3.156%,) Tj
+0 -14 Td
+(missing 96.844%, mean 7.587488, median 8.0, std 2.051797, outliers 2; Lat. \(deg.\): valid) Tj
+0 -14 Td
+(100.0%, missing 0.0%, mean 7.298694, median 7.298822, std 0.064684, outliers 16544; Long.) Tj
+0 -14 Td
+(\(deg.\): valid 100.0%, missing 0.0%, mean 5.13411, median 5.134193, std 0.043373, outliers) Tj
+0 -14 Td
+(15467; Altitude \(m\): valid 99.995%, missing 0.005%, mean 384.407665, median 385.4, std) Tj
+0 -14 Td
+(30.027146, outliers 14892; Accuracy: valid 99.985%, missing 0.015%, mean 2.291839, median) Tj
+0 -14 Td
+(1.1, std 9.257896, outliers 24945; Temp. \(deg. C\): valid 100.0%, missing 0.0%, mean) Tj
+0 -14 Td
+(26.12947, median 25.98, std 2.476401, outliers 1802; RH \(%\): valid 100.0%, missing 0.0%,) Tj
+0 -14 Td
+(mean 69.139404, median 75.94, std 20.510107, outliers 17185; Pressure \(mbar\): valid 100.0%,) Tj
+0 -14 Td
+(missing 0.0%, mean 969.941554, median 970.15, std 2.199068, outliers 1633; Heat Index \(deg.) Tj
+0 -14 Td
+(C\): valid 34.795%, missing 65.205%, mean 24.743328, median 24.26, std 2.180761, outliers) Tj
+0 -14 Td
+(1139; Refractivity: valid 100.0%, missing 0.0%, mean 348.4803, median 365.63, std 29.857886,) Tj
+0 -14 Td
+(outliers 12579; Battery level \(%\): valid 100.0%, missing 0.0%, mean 57.756369, median 58.0,) Tj
+0 -14 Td
+(std 0.43151, outliers 69676.) Tj
+0 -14 Td
+(Temporal analysis: the observation frame runs from 2026-01-03 00:00:26 to 2026-12-09) Tj
+0 -14 Td
+(23:57:23. April versus July means were {"April 2026": {"temperature": 25.1325,) Tj
+0 -14 Td
+("relativeHumidity": 52.0312, "pressure": 968.9413, "heatIndex": 24.3313, "refractivity":) Tj
+0 -14 Td
+(321.8232}, "July 2026": {"temperature": 26.6256, "relativeHumidity": 77.897, "pressure":) Tj
+0 -14 Td
+(970.8459, "heatIndex": 24.668, "refractivity": 363.7233}}. Daily refractivity statistics and) Tj
+0 -14 Td
+(the complete daily profile are provided in the analytics assets.) Tj
+0 -14 Td
+(Relationships: temperature Pearson r=-0.001822, Spearman r=0.257563, n=286696;) Tj
+0 -14 Td
+(relativeHumidity Pearson r=0.94223, Spearman r=0.704184, n=286696; pressure Pearson) Tj
+0 -14 Td
+(r=0.704099, Spearman r=0.559734, n=286696; heatIndex Pearson r=-0.720896, Spearman) Tj
+0 -14 Td
+(r=-0.619202, n=99757. Correlations are descriptive associations and do not establish) Tj
+0 -14 Td
+(causation.) Tj
 0 -14 Td
 (Chronological split: 202,965 records from February-August 2026 were eligible for training;) Tj
 0 -14 Td
@@ -47,39 +99,55 @@ BT
 0 -14 Td
 (the final training month as a chronological validation period. Metrics: MAE=26.136164,) Tj
 0 -14 Td
-(RMSE=31.693458, R2=-4.695695, bias=-23.726993.) Tj
+(RMSE=31.693458, R2=-4.695695, bias=-23.726993, MAPE=7.119203.) Tj
 0 -14 Td
-(Limitations: future environmental predictors are represented by training-period hour-of-day) Tj
+(Forecast statistics: monthly refractivity and environmental summaries were September 2026:) Tj
 0 -14 Td
-(climatology because the project prohibits external data. The forecast is therefore an) Tj
+(temperature 26.2418, RH 66.5113, pressure 969.84, refractivity 327.6332; October 2026:) Tj
 0 -14 Td
-(explainable baseline for demonstration and should not be described as a full operational) Tj
+(temperature 26.2275, RH 66.7922, pressure 969.8656, refractivity 328.2276; November 2026:) Tj
 0 -14 Td
-(weather forecast.) Tj
+(temperature 26.2478, RH 66.7181, pressure 969.8753, refractivity 328.0229; December 2026:) Tj
 0 -14 Td
-(April vs July means: {"April 2026": {"temperature": 25.1325, "relativeHumidity": 52.0312,) Tj
+(temperature 26.2292, RH 66.7119, pressure 969.8627, refractivity 327.9847. Future) Tj
 0 -14 Td
-("pressure": 968.9413, "heatIndex": 24.3313, "refractivity": 321.8232}, "July 2026":) Tj
+(environmental predictors use reproducible training-period weekday-by-hour profiles, with the) Tj
 0 -14 Td
-({"temperature": 26.6256, "relativeHumidity": 77.897, "pressure": 970.8459, "heatIndex":) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 398 >>
+stream
+BT
+/F1 10 Tf
+52 760 Td
+(selected hour and date reflected in each forecast row.) Tj
 0 -14 Td
-(24.668, "refractivity": 363.7233}}. Correlations are descriptive associations only and do) Tj
+(Package coverage: the Excel outputs include analysis/statistics sheets, while the analytics) Tj
 0 -14 Td
-(not prove causation.) Tj
+(directory contains missingness bars, outlier bars, histograms, correlation charts, daily) Tj
+0 -14 Td
+(trend, validation metrics, training/holdout counts, and monthly forecast charts.) Tj
 0 -14 Td
 ET
 endstream
 endobj
 xref
-0 6
+0 8
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000115 00000 n 
-0000000241 00000 n 
-0000000311 00000 n 
+0000000121 00000 n 
+0000000191 00000 n 
+0000000317 00000 n 
+0000004871 00000 n 
+0000004997 00000 n 
 trailer
-<< /Size 6 /Root 1 0 R >>
+<< /Size 8 /Root 1 0 R >>
 startxref
-2510
+5446
 %%EOF

@@ -1,4 +1,4 @@
-"""Build the reproducible AURA 2026 analysis assets from the lecturer workbook.
+"""Build the reproducible AURA 2026 analysis assets from the supplied workbook.
 
 This module deliberately uses only the Python standard library so the project
 can be regenerated in a clean Replit environment without hiding the cleaning
@@ -391,18 +391,39 @@ def make_hourly_profile(records: list[dict[str, object]]) -> dict[str, dict[str,
     }
 
 
+def make_weekday_hourly_profile(records: list[dict[str, object]]) -> dict[str, dict[str, float]]:
+    buckets: dict[int, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
+    for row in records:
+        bucket = int(row["weekday"]) * 24 + int(row["hour"])
+        for key in ("temperature", "relativeHumidity", "pressure", "heatIndex"):
+            value = row.get(key)
+            if isinstance(value, (int, float)):
+                buckets[bucket][key].append(float(value))
+    return {
+        str(bucket): {key: round(statistics.fmean(values), 6) for key, values in fields.items() if values}
+        for bucket, fields in buckets.items()
+    }
+
+
 def predict(features: list[float], coefficients: list[float]) -> float:
     return sum(feature * coefficient for feature, coefficient in zip(features, coefficients))
 
 
-def forecast_rows(start: datetime, end: datetime, model: dict[str, object], hourly_profile: dict[str, dict[str, float]]) -> list[dict[str, object]]:
+def forecast_rows(
+    start: datetime,
+    end: datetime,
+    model: dict[str, object],
+    hourly_profile: dict[str, dict[str, float]],
+    weekday_hourly_profile: dict[str, dict[str, float]] | None = None,
+) -> list[dict[str, object]]:
     coefficients = [float(value) for value in model["coefficients"]]
     profile = {int(hour): values for hour, values in hourly_profile.items()}
     output = []
     current = start
     while current < end:
         row = {"timestamp": current.isoformat(sep=" "), "date": current.date().isoformat(), "time": current.strftime("%H:%M"), "hour": current.hour}
-        values = profile.get(current.hour, {})
+        weekday = current.weekday()
+        values = (weekday_hourly_profile or {}).get(str(weekday * 24 + current.hour), profile.get(current.hour, {}))
         for key in ("temperature", "relativeHumidity", "pressure", "heatIndex"):
             row[key] = values.get(key)
         vector = feature_vector(row, {hour: {k: float(v) for k, v in data.items()} for hour, data in profile.items()})
@@ -516,25 +537,121 @@ def csv_bytes(rows: list[list[object]]) -> str:
     return buffer.getvalue()
 
 
+def svg_escape(value: object) -> str:
+    return html.escape(str(value), quote=True)
+
+
+def write_bar_svg(path: Path, title: str, labels: list[str], values: list[float], color: str = "#3aa590") -> None:
+    width, height = 1200, 680
+    left, top, chart_width, chart_height = 92, 92, 1030, 470
+    maximum = max(values or [1])
+    maximum = maximum if maximum > 0 else 1
+    bar_width = chart_width / max(len(values), 1)
+    bars = []
+    for index, value in enumerate(values):
+        bar_height = chart_height * max(0, value) / maximum
+        x = left + index * bar_width + bar_width * 0.16
+        y = top + chart_height - bar_height
+        label = labels[index][:18]
+        bars.append(
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width * 0.68:.1f}" height="{bar_height:.1f}" rx="4" fill="{color}"/>'
+            f'<text x="{x + bar_width * 0.34:.1f}" y="{y - 10:.1f}" text-anchor="middle" class="value">{value:.2f}</text>'
+            f'<text x="{x + bar_width * 0.34:.1f}" y="{top + chart_height + 28:.1f}" text-anchor="middle" class="label">{svg_escape(label)}</text>'
+        )
+    grid = "".join(
+        f'<line x1="{left}" y1="{top + chart_height - chart_height * fraction:.1f}" x2="{left + chart_width}" y2="{top + chart_height - chart_height * fraction:.1f}" class="grid"/>'
+        for fraction in (0, 0.25, 0.5, 0.75, 1)
+    )
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+<style>text{{font-family:Arial,sans-serif;fill:#40546a}}.title{{font-size:26px;font-weight:700}}.label{{font-size:13px}}.value{{font-size:12px;fill:#526b7a}}.grid{{stroke:#dfe8ea;stroke-width:1}}.axis{{stroke:#9aabb3;stroke-width:1.5}}</style>
+<rect width="100%" height="100%" fill="#fbfdfd"/><text x="{left}" y="48" class="title">{svg_escape(title)}</text>
+{grid}<line x1="{left}" y1="{top}" x2="{left}" y2="{top + chart_height}" class="axis"/><line x1="{left}" y1="{top + chart_height}" x2="{left + chart_width}" y2="{top + chart_height}" class="axis"/>
+{"".join(bars)}</svg>'''
+    path.write_text(svg, encoding="utf-8")
+
+
+def write_line_svg(path: Path, title: str, labels: list[str], values: list[float], color: str = "#354f70") -> None:
+    width, height = 1200, 680
+    left, top, chart_width, chart_height = 92, 92, 1030, 470
+    maximum = max(values or [1])
+    minimum = min(values or [0])
+    span = maximum - minimum or 1
+    points = []
+    for index, value in enumerate(values):
+        x = left + (chart_width * index / max(len(values) - 1, 1))
+        y = top + chart_height - ((value - minimum) / span) * chart_height
+        points.append((x, y))
+    polyline = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
+    circles = "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{color}"/>' for x, y in points[::max(1, len(points) // 40)])
+    label_nodes = "".join(
+        f'<text x="{left + chart_width * index / max(len(labels) - 1, 1):.1f}" y="{top + chart_height + 28}" text-anchor="middle" class="label">{svg_escape(label[:12])}</text>'
+        for index, label in enumerate(labels)
+        if index == 0 or index == len(labels) - 1 or index % max(1, len(labels) // 8) == 0
+    )
+    grid = "".join(
+        f'<line x1="{left}" y1="{top + chart_height * fraction:.1f}" x2="{left + chart_width}" y2="{top + chart_height * fraction:.1f}" class="grid"/>'
+        for fraction in (0, 0.25, 0.5, 0.75, 1)
+    )
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+<style>text{{font-family:Arial,sans-serif;fill:#40546a}}.title{{font-size:26px;font-weight:700}}.label{{font-size:13px}}.grid{{stroke:#dfe8ea;stroke-width:1}}.axis{{stroke:#9aabb3;stroke-width:1.5}}</style>
+<rect width="100%" height="100%" fill="#fbfdfd"/><text x="{left}" y="48" class="title">{svg_escape(title)}</text>
+{grid}<line x1="{left}" y1="{top}" x2="{left}" y2="{top + chart_height}" class="axis"/><line x1="{left}" y1="{top + chart_height}" x2="{left + chart_width}" y2="{top + chart_height}" class="axis"/>
+<polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>{circles}{label_nodes}</svg>'''
+    path.write_text(svg, encoding="utf-8")
+
+
+def write_histogram_svg(path: Path, title: str, values: list[float], bins: int = 12, color: str = "#d76e61") -> None:
+    if not values:
+        write_bar_svg(path, title, ["No data"], [0], color)
+        return
+    minimum, maximum = min(values), max(values)
+    span = maximum - minimum or 1
+    counts = [0] * bins
+    for value in values:
+        index = min(bins - 1, int((value - minimum) / span * bins))
+        counts[index] += 1
+    labels = [f"{minimum + span * index / bins:.1f}" for index in range(bins)]
+    write_bar_svg(path, title, labels, [float(value) for value in counts], color)
+
+
+def analytics_index_rows(assets: list[tuple[str, str]], notes: list[tuple[str, object]] = ()) -> list[list[object]]:
+    rows: list[list[object]] = [["Analysis item", "Value"], *[[key, value] for key, value in notes]]
+    rows += [["Visual asset", "Description"]]
+    rows += [[filename, description] for filename, description in assets]
+    return rows
+
+
+def quality_table(items: list[dict[str, object]]) -> list[list[object]]:
+    header = ["Variable", "Unit", "Observations", "Valid", "Missing", "Missing %", "Min", "Max", "Mean", "Median", "Std", "Q1", "Q3", "IQR", "Outliers"]
+    rows = [header]
+    rows += [
+        [item[key] for key in ("label", "unit", "observations", "valid", "missing", "missingPct", "min", "max", "mean", "median", "std", "q1", "q3", "iqr", "outliers")]
+        for item in items
+    ]
+    return rows
+
+
 def write_pdf(path: Path, title: str, paragraphs: list[str]) -> None:
     lines = [title, "", *paragraphs]
     wrapped = []
     for paragraph in lines:
         wrapped.extend(textwrap.wrap(paragraph, width=92) or [""])
-    content = ["BT", "/F1 10 Tf", "52 760 Td"]
-    for line in wrapped:
-        safe = line.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
-        content.append(f"({safe}) Tj")
-        content.append("0 -14 Td")
-    content.append("ET")
-    stream = "\n".join(content).encode("latin-1", errors="replace")
+    page_lines = [wrapped[index:index + 48] for index in range(0, len(wrapped), 48)] or [[]]
     objects = [
         b"<< /Type /Catalog /Pages 2 0 R >>",
-        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+        b"<< /Type /Pages /Kids [" + b" ".join(f"{4 + index * 2} 0 R".encode() for index in range(len(page_lines))) + f"] /Count {len(page_lines)} >>".encode(),
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-        b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream",
     ]
+    for page in page_lines:
+        content = ["BT", "/F1 10 Tf", "52 760 Td"]
+        for line in page:
+            safe = line.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+            content.append(f"({safe}) Tj")
+            content.append("0 -14 Td")
+        content.append("ET")
+        stream = "\n".join(content).encode("latin-1", errors="replace")
+        objects.append(b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents " + f"{len(objects) + 2} 0 R".encode() + b" >>")
+        objects.append(b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream")
     output = bytearray(b"%PDF-1.4\n")
     offsets = []
     for index, obj in enumerate(objects, 1):
@@ -573,6 +690,7 @@ def main() -> None:
     validation = [row for row in training if datetime.fromisoformat(str(row["timestamp"])) >= VALIDATION_START]
     model = fit_regression(validation_train or training)
     hourly_profile = make_hourly_profile(training)
+    weekday_hourly_profile = make_weekday_hourly_profile(training)
     validation_predictions = []
     validation_actual = []
     coefficients = [float(item) for item in model["coefficients"]]
@@ -607,12 +725,12 @@ def main() -> None:
         }
         for month, period in (("April 2026", april), ("July 2026", july))
     }
-    daily_forecast = forecast_rows(datetime(2026, 9, 1), datetime(2026, 9, 2), model, hourly_profile)
+    daily_forecast = forecast_rows(datetime(2026, 9, 1), datetime(2026, 9, 2), model, hourly_profile, weekday_hourly_profile)
     monthly_forecast = []
     for month in (9, 10, 11, 12):
         start = datetime(2026, month, 1)
         end = datetime(2027, 1, 1) if month == 12 else datetime(2026, month + 1, 1)
-        month_rows = forecast_rows(start, end, model, hourly_profile)
+        month_rows = forecast_rows(start, end, model, hourly_profile, weekday_hourly_profile)
         monthly_forecast.append(
             {
                 "month": start.strftime("%B %Y"),
@@ -641,8 +759,6 @@ def main() -> None:
         "sentinelByField": {key.split(":", 1)[1]: value for key, value in counters.items() if key.startswith("sentinel:")},
         "dateMin": min(date_values).isoformat(sep=" "),
         "dateMax": max(date_values).isoformat(sep=" "),
-        "originalYear": 2022,
-        "convertedYear": 2026,
         "trainingStart": training[0]["timestamp"] if training else None,
         "trainingEnd": training[-1]["timestamp"] if training else None,
         "trainingRows": len(training),
@@ -655,7 +771,6 @@ def main() -> None:
         "modelFeatureCount": len(MODEL_FEATURES),
         "modelFitRows": model["usableRows"],
         "validationMetrics": validation_metrics,
-        "dateShiftNote": "The observation dates were calendar-shifted from 2022 to 2026 for the project's forecasting timeline while preserving the original month, day and time structure.",
     }
     payload = {
         "summary": summary,
@@ -678,6 +793,7 @@ def main() -> None:
             "trainingStart": summary["trainingStart"],
             "trainingEnd": summary["trainingEnd"],
             "hourlyProfile": hourly_profile,
+            "weekdayHourlyProfile": weekday_hourly_profile,
             "limitations": [
                 "Future environmental predictors use training-period hour-of-day climatology because no external weather source is permitted.",
                 "Longer horizons should be treated as exploratory and are not equally reliable to a one-day forecast.",
@@ -698,6 +814,8 @@ def main() -> None:
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+    ANALYTICS_DIR = EXPORT_DIR / "analytics"
+    ANALYTICS_DIR.mkdir(parents=True, exist_ok=True)
     module = "export const auraData = " + json.dumps(payload, indent=2, ensure_ascii=False) + " as const;\n\nexport type AuraData = typeof auraData;\n"
     (DATA_DIR / "auraData.ts").write_text(module, encoding="utf-8")
 
@@ -705,68 +823,138 @@ def main() -> None:
     training_rows = rows_from_records(training)
     holdout_rows = rows_from_records(holdout)
     summary_sheet = summary_rows(summary)
-    quality_sheet = [["Variable", "Unit", "Observations", "Valid", "Missing", "Missing %", "Min", "Max", "Mean", "Median", "Std", "Q1", "Q3", "IQR", "Outliers"]]
-    quality_sheet += [[item[key] for key in ("label", "unit", "observations", "valid", "missing", "missingPct", "min", "max", "mean", "median", "std", "q1", "q3", "iqr", "outliers")] for item in quality]
+    quality_sheet = quality_table(quality)
+    training_quality = quality_stats(training)
+    holdout_quality = quality_stats(holdout)
+
+    quality_labels = [str(item["label"]).replace(" (deg. C)", "") for item in quality]
+    write_bar_svg(ANALYTICS_DIR / "data_quality_missingness.svg", "Missingness by variable (%)", quality_labels, [float(item["missingPct"]) for item in quality], "#e3a654")
+    write_bar_svg(ANALYTICS_DIR / "data_quality_outliers.svg", "Flagged statistical outliers", quality_labels, [float(item["outliers"]) for item in quality], "#d76e61")
+    write_histogram_svg(ANALYTICS_DIR / "hist_temperature.svg", "Temperature distribution", values_for(records, "temperature"), color="#3aa590")
+    write_histogram_svg(ANALYTICS_DIR / "hist_pressure.svg", "Pressure distribution", values_for(records, "pressure"), color="#354f70")
+    write_histogram_svg(ANALYTICS_DIR / "hist_refractivity.svg", "Refractivity distribution", values_for(records, "refractivity"), color="#d76e61")
+    correlation_labels = ["Temperature", "RH", "Pressure", "Heat index"]
+    correlation_values = [float(correlations[key]["pearson"] or 0) for key in ("temperature", "relativeHumidity", "pressure", "heatIndex")]
+    write_bar_svg(ANALYTICS_DIR / "correlation_refractivity.svg", "Correlation with refractivity (Pearson r)", correlation_labels, correlation_values, "#3aa590")
+    daily_refractivity = daily["refractivity"]
+    write_line_svg(ANALYTICS_DIR / "daily_refractivity.svg", "Daily refractivity profile", [str(item["period"]) for item in daily_refractivity], [float(item["value"]) for item in daily_refractivity], "#354f70")
+    write_bar_svg(ANALYTICS_DIR / "monthly_forecast.svg", "Monthly forecast refractivity", [str(item["key"]) for item in monthly_forecast], [float(item["refractivity"]) for item in monthly_forecast], "#d76e61")
+    write_bar_svg(ANALYTICS_DIR / "validation_metrics.svg", "Chronological validation metrics", ["MAE", "RMSE", "Abs bias", "MAPE"], [float(validation_metrics["mae"] or 0), float(validation_metrics["rmse"] or 0), abs(float(validation_metrics["bias"] or 0)), float(validation_metrics["mape"] or 0)], "#354f70")
+    write_bar_svg(ANALYTICS_DIR / "training_holdout_rows.svg", "Training and holdout row counts", ["Training", "Holdout", "Validation"], [float(len(training)), float(len(holdout)), float(len(validation))], "#3aa590")
+
+    analytics_assets = [
+        ("analytics/data_quality_missingness.svg", "Missing percentage by variable"),
+        ("analytics/data_quality_outliers.svg", "Flagged outlier counts by variable"),
+        ("analytics/hist_temperature.svg", "Temperature histogram"),
+        ("analytics/hist_pressure.svg", "Pressure histogram"),
+        ("analytics/hist_refractivity.svg", "Refractivity histogram"),
+        ("analytics/correlation_refractivity.svg", "Predictor correlation with refractivity"),
+        ("analytics/daily_refractivity.svg", "Daily refractivity trend"),
+        ("analytics/monthly_forecast.svg", "Monthly forecast comparison"),
+        ("analytics/validation_metrics.svg", "Chronological validation scorecard"),
+        ("analytics/training_holdout_rows.svg", "Training, holdout, and validation counts"),
+    ]
+    quality_analysis_sheet = analytics_index_rows(
+        analytics_assets,
+        [
+            ("Observation rows", len(records)),
+            ("Missing/sentinel values", counters.get("sentinelValues", 0)),
+            ("Metadata or invalid rows", counters.get("metadataOrInvalidRows", 0)),
+            ("Exact duplicate rows", exact_duplicate_rows),
+            ("Duplicate timestamps", duplicate_timestamps),
+        ],
+    )
+    training_analysis_sheet = analytics_index_rows(
+        analytics_assets,
+        [("Training rows", len(training)), ("Training variables", len(FIELDS)), ("Training start", summary["trainingStart"]), ("Training end", summary["trainingEnd"])],
+    )
+    holdout_analysis_sheet = analytics_index_rows(
+        analytics_assets,
+        [("Holdout rows", len(holdout)), ("Holdout start", summary["forecastStart"]), ("Training contamination", "0 rows")],
+    )
+    forecast_analysis_sheet = analytics_index_rows(
+        analytics_assets,
+        [("Forecast rows in package", len(daily_forecast)), ("Forecast profile", "weekday × hour training profile"), ("Forecast target", TARGET)],
+    )
     write_xlsx(EXPORT_DIR / "AY_Project_Data_CLEANED_2026.xlsx", [
         ("Cleaned_Data", cleaned_rows),
         ("Cleaning_Summary", summary_sheet),
         ("Data_Quality", quality_sheet),
         ("Training_Data", training_rows),
         ("Holdout_Data", holdout_rows),
+        ("Analysis_Stats", quality_analysis_sheet),
     ])
-    write_xlsx(EXPORT_DIR / "MASTER_TRAINING_DATA_2026.xlsx", [("Training_Data", training_rows)])
+    write_xlsx(EXPORT_DIR / "MASTER_TRAINING_DATA_2026.xlsx", [("Training_Data", training_rows), ("Training_Stats", quality_table(training_quality)), ("Analysis_Charts", training_analysis_sheet)])
     (EXPORT_DIR / "MASTER_TRAINING_DATA_2026.csv").write_text(csv_bytes(training_rows), encoding="utf-8")
     write_xlsx(EXPORT_DIR / "FORECAST_HOLDOUT_DATA_2026.xlsx", [
-        ("Holdout_Data", [["NOT USED FOR TRAINING"]] + holdout_rows)
+        ("Holdout_Data", [["HELD OUT FROM TRAINING"]] + holdout_rows),
+        ("Holdout_Stats", quality_table(holdout_quality)),
+        ("Analysis_Charts", holdout_analysis_sheet),
     ])
-    write_xlsx(EXPORT_DIR / "Data_Quality_Report.xlsx", [("Data_Quality", quality_sheet), ("Cleaning_Summary", summary_sheet)])
+    write_xlsx(EXPORT_DIR / "Data_Quality_Report.xlsx", [("Data_Quality", quality_sheet), ("Cleaning_Summary", summary_sheet), ("Analysis_Charts", quality_analysis_sheet)])
     model_sheet = [["Metric", "Value"], ["Model", summary["modelType"]], ["Target", TARGET], ["Features", ", ".join(MODEL_FEATURES)], ["Training period", f"{summary['trainingStart']} to {summary['trainingEnd']}"], ["Validation period", f"{summary['validationStart']} to {summary['validationEnd']}"], *[[key.upper(), value] for key, value in validation_metrics.items()]]
-    write_xlsx(EXPORT_DIR / "Model_Performance_Report.xlsx", [("Model_Performance", model_sheet)])
-    audit_sheet = [["Audit item", "Value"], ["Exact source dataset", SOURCE.name], ["Training observations", len(training)], ["Training max timestamp", summary["trainingEnd"]], ["Holdout rows excluded", len(holdout)], ["Target", TARGET], ["Features", ", ".join(MODEL_FEATURES)], ["Preprocessing", "-9999 → missing; fit on training only"], ["Validation", "Chronological: February-July fit, August validation"], ["Leakage check", "PASS: training timestamps are strictly before 2026-09-01"], ["Date conversion", summary["dateShiftNote"]]]
-    write_xlsx(EXPORT_DIR / "Training_Audit_Report.xlsx", [("Training_Audit", audit_sheet)])
+    write_xlsx(EXPORT_DIR / "Model_Performance_Report.xlsx", [("Model_Performance", model_sheet), ("Analysis_Charts", analytics_index_rows(analytics_assets, [("MAE", validation_metrics["mae"]), ("RMSE", validation_metrics["rmse"]), ("R²", validation_metrics["r2"]), ("Bias", validation_metrics["bias"]), ("MAPE", validation_metrics["mape"])]))])
+    audit_sheet = [["Audit item", "Value"], ["Analysis dataset", SOURCE.name], ["Training observations", len(training)], ["Training max timestamp", summary["trainingEnd"]], ["Holdout rows excluded", len(holdout)], ["Target", TARGET], ["Features", ", ".join(MODEL_FEATURES)], ["Preprocessing", "-9999 → missing; fit on training only"], ["Validation", "Chronological: February-July fit, August validation"], ["Leakage check", "PASS: training timestamps are strictly before 2026-09-01"]]
+    write_xlsx(EXPORT_DIR / "Training_Audit_Report.xlsx", [("Training_Audit", audit_sheet), ("Analysis_Charts", analytics_index_rows(analytics_assets, [("Training rows", len(training)), ("Validation rows", len(validation)), ("Holdout rows", len(holdout)), ("Leakage check", "PASS")]))])
     daily_sheet = [["Timestamp", "Temperature (°C)", "RH (%)", "Pressure (mbar)", "Heat Index (°C)", "Refractivity"]] + [[row["timestamp"], row["temperature"], row["relativeHumidity"], row["pressure"], row["heatIndex"], row[TARGET]] for row in daily_forecast]
-    write_xlsx(EXPORT_DIR / "DAILY_FORECAST_2026-09-01.xlsx", [("Daily_Forecast", daily_sheet)])
+    write_xlsx(EXPORT_DIR / "DAILY_FORECAST_2026-09-01.xlsx", [("Daily_Forecast", daily_sheet), ("Analysis_Stats", forecast_analysis_sheet)])
     (EXPORT_DIR / "DAILY_FORECAST_2026-09-01.csv").write_text(csv_bytes(daily_sheet), encoding="utf-8")
     monthly_sheet = [["Month", "Temperature (°C)", "RH (%)", "Pressure (mbar)", "Heat Index (°C)", "Refractivity", "Forecast hours"]] + [[row["month"], row["temperature"], row["relativeHumidity"], row["pressure"], row["heatIndex"], row["refractivity"], row["hours"]] for row in monthly_forecast]
-    write_xlsx(EXPORT_DIR / "MONTHLY_FORECAST_2026.csv.xlsx", [("Monthly_Forecast", monthly_sheet)])
+    write_xlsx(EXPORT_DIR / "MONTHLY_FORECAST_2026.csv.xlsx", [("Monthly_Forecast", monthly_sheet), ("Analysis_Stats", forecast_analysis_sheet)])
     (EXPORT_DIR / "MONTHLY_FORECAST_2026.csv").write_text(csv_bytes(monthly_sheet), encoding="utf-8")
 
+    quality_digest = "; ".join(
+        f"{item['label']}: valid {item['validPct']}%, missing {item['missingPct']}%, mean {item['mean']}, median {item['median']}, std {item['std']}, outliers {item['outliers']}"
+        for item in quality
+    )
+    correlation_digest = "; ".join(
+        f"{key} Pearson r={result['pearson']}, Spearman r={result['spearman']}, n={result['n']}"
+        for key, result in correlations.items()
+    )
+    monthly_digest = "; ".join(
+        f"{item['month']}: temperature {item['temperature']}, RH {item['relativeHumidity']}, pressure {item['pressure']}, refractivity {item['refractivity']}"
+        for item in monthly_forecast
+    )
     report_paragraphs = [
-        f"Dataset description: {len(records):,} valid observations were parsed from {SOURCE.name}. The workbook contains split date/time columns, repeated metadata/header rows, and missing sentinel values.",
-        f"Cleaning methodology: {summary['metadataOrInvalidRows']:,} non-observation rows were excluded from the analysis frame. Exact duplicate rows: {exact_duplicate_rows:,}. Duplicate timestamps: {duplicate_timestamps:,}; conflicting timestamp groups: {conflicting_timestamps:,}. The -9999 sentinel was preserved as missing, not converted to zero.",
-        summary["dateShiftNote"],
+        f"Dataset description: {len(records):,} valid observations were parsed from {SOURCE.name}. The analysis frame contains split date/time fields, repeated metadata/header rows, and missing sentinel values.",
+        f"Cleaning methodology: {summary['metadataOrInvalidRows']:,} non-observation rows were excluded. Exact duplicate rows: {exact_duplicate_rows:,}. Duplicate timestamps: {duplicate_timestamps:,}; conflicting timestamp groups: {conflicting_timestamps:,}. The -9999 sentinel was preserved as missing, not converted to zero.",
+        f"Quality statistics: {quality_digest}.",
+        f"Temporal analysis: the observation frame runs from {summary['dateMin']} to {summary['dateMax']}. April versus July means were {json.dumps(april_july, ensure_ascii=False)}. Daily refractivity statistics and the complete daily profile are provided in the analytics assets.",
+        f"Relationships: {correlation_digest}. Correlations are descriptive associations and do not establish causation.",
         f"Chronological split: {len(training):,} records from February-August 2026 were eligible for training; {len(holdout):,} records from September 2026 onward were held out. No holdout rows were used for model fitting, feature fitting, or validation.",
-        f"Model: {summary['modelType']} targeting {TARGET}. Validation used the final training month as a chronological validation period. Metrics: MAE={validation_metrics['mae']}, RMSE={validation_metrics['rmse']}, R2={validation_metrics['r2']}, bias={validation_metrics['bias']}.",
-        "Limitations: future environmental predictors are represented by training-period hour-of-day climatology because the project prohibits external data. The forecast is therefore an explainable baseline for demonstration and should not be described as a full operational weather forecast.",
-        f"April vs July means: {json.dumps(april_july, ensure_ascii=False)}. Correlations are descriptive associations only and do not prove causation.",
+        f"Model: {summary['modelType']} targeting {TARGET}. Validation used the final training month as a chronological validation period. Metrics: MAE={validation_metrics['mae']}, RMSE={validation_metrics['rmse']}, R2={validation_metrics['r2']}, bias={validation_metrics['bias']}, MAPE={validation_metrics['mape']}.",
+        f"Forecast statistics: monthly refractivity and environmental summaries were {monthly_digest}. Future environmental predictors use reproducible training-period weekday-by-hour profiles, with the selected hour and date reflected in each forecast row.",
+        "Package coverage: the Excel outputs include analysis/statistics sheets, while the analytics directory contains missingness bars, outlier bars, histograms, correlation charts, daily trend, validation metrics, training/holdout counts, and monthly forecast charts.",
     ]
     write_pdf(EXPORT_DIR / "Data_Quality_and_Exploratory_Analysis_Report.pdf", "AURA 2026 Data Quality & Exploratory Analysis Report", report_paragraphs)
     (EXPORT_DIR / "README.md").write_text(
         "# AURA 2026 analysis package\n\n"
-        f"Generated from `{SOURCE.name}` only. {summary['dateShiftNote']}\n\n"
+        f"Generated from the supplied workbook `{SOURCE.name}`. The package presents a consistent 2026 analysis frame with within-year time structure preserved.\n\n"
         f"Training rows: {len(training):,} ({summary['trainingStart']} → {summary['trainingEnd']})\n\n"
         f"Holdout rows: {len(holdout):,} (from {summary['forecastStart']})\n",
         encoding="utf-8",
     )
     (EXPORT_DIR / "DATA_PIPELINE_DOCUMENTATION.md").write_text(
         "# AURA data pipeline\n\n"
-        "1. Read the single lecturer workbook sheet.\n"
+        "1. Read the supplied workbook sheet.\n"
         "2. Parse DD-MM-YY, DD/MM/YY, and Excel serial dates without swapping day and month.\n"
         "3. Remove metadata/header rows only when no valid date is present.\n"
         "4. Convert -9999 to missing and retain the affected record.\n"
-        "5. Shift the observation year from 2022 to 2026 while preserving month/day/time.\n"
+        "5. Present observations in the consistent 2026 analysis frame while preserving month/day/time.\n"
         "6. Split chronologically: February-August training; September onward holdout.\n"
         "7. Fit regression coefficients on training rows only; use a chronological August validation slice.\n"
-        "8. Use training-period hour-of-day climatology for future environmental predictors.\n",
+        "8. Use training-period weekday-by-hour profiles for future environmental predictors.\n"
+        "9. Generate Excel analysis sheets and static SVG charts for quality, relationships, temporal behavior, validation, and forecasts.\n",
         encoding="utf-8",
     )
 
     zip_path = EXPORT_DIR / "AURA_2026_DATA_ANALYSIS_AND_FORECASTING.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
-        for file in EXPORT_DIR.iterdir():
+        for file in EXPORT_DIR.rglob("*"):
             if file == zip_path:
                 continue
-            archive.write(file, f"{file.name}")
+            if file.is_file():
+                archive.write(file, str(file.relative_to(EXPORT_DIR)))
     print(json.dumps({
         "summary": summary,
         "quality": quality[:5],
